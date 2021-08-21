@@ -31,13 +31,10 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="To Do List" id="K4f-Un-mck"/>
-                    <connections>
-                        <outlet property="toDoTableView" destination="nLy-mE-hHx" id="qHT-FG-wXZ"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c2e-pS-bwx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="279.71014492753625" y="45.535714285714285"/>
+            <point key="canvasLocation" x="74" y="46"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="mhz-4O-Vs6">

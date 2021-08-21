@@ -11,7 +11,7 @@ import UIKit
 class ToDoTableViewController: UITableViewController {
 
     
-    // create array to use in table
+    // create array to use in table view
     let itemArray: [String] = [
         "one of the very few fiction films about Nazi",
         "principally Witold Lesiewicz",
@@ -40,7 +40,7 @@ class ToDoTableViewController: UITableViewController {
         // ask for the data source for a cell to insert in a particular location of the table view
         override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             
-            // create proper item to get acces to row in Table View
+            // create item to get acces to row in itemArray of Table View
             let item = itemArray[indexPath.row]
             
             // Returns a reusable table-view cell object for the specified reuse identifier and adds it to the table.
@@ -54,10 +54,18 @@ class ToDoTableViewController: UITableViewController {
         }
    
     //MARK: - UITableViewDataDelegate
+    
     // delegate to create an interaction UI with tableview
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Hi there")
-        tableView.backgroundColor = .cyan
+        print(itemArray[indexPath.row])
+        
+        // add accessory mark in choosen row
+        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        
+        
+        // create animdted effect of deselecting row
+        tableView.deselectRow(at: indexPath, animated: true)
+        
     }
 }
 

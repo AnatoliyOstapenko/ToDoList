@@ -7,7 +7,7 @@
 
 import UIKit
 
-// change UIViewController to UITableViewController
+// change UIViewController to UITableViewController (UITableViewDataSource and UITableViewDelegate included)
 class ToDoTableViewController: UITableViewController {
 
     
@@ -22,8 +22,11 @@ class ToDoTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Registers a class for use in creating new table cells.
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ToDoCell")
+        
+        // switch to Light Mode screen (avoid dark background table view)
+        overrideUserInterfaceStyle = .light
+//        // Registers a class for use in creating new table cells.
+//        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ToDoCell")
 
     }
     //MARK: - UITableViewDataSource
@@ -40,17 +43,22 @@ class ToDoTableViewController: UITableViewController {
             // create proper item to get acces to row in Table View
             let item = itemArray[indexPath.row]
             
-            // Return a reusable table view cell object as! MessageCell
+            // Returns a reusable table-view cell object for the specified reuse identifier and adds it to the table.
             let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath)
             
-            cell.textLabel?.text = "String(item[0])"
-
-
+            // dispatch to default text label list of text from array
+            cell.textLabel?.text = item
             return cell
             
             
         }
-    
+   
+    //MARK: - UITableViewDataDelegate
+    // delegate to create an interaction UI with tableview
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        print("Hi there\(indexPath)")
+        
+    }
 }
 
 

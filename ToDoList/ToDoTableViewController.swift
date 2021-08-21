@@ -16,7 +16,7 @@ class ToDoTableViewController: UITableViewController {
     
     
     // create array to use in table
-    let itemArray = ["1", "2", "3"]
+    let itemArray: [String] = ["1", "2", "3"]
     
     override func viewDidLoad() {
         super.viewDidLoad()

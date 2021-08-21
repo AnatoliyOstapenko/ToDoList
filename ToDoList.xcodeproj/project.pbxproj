@@ -13,7 +13,6 @@
 		FA05165926D045FA00D8666B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA05165726D045FA00D8666B /* Main.storyboard */; };
 		FA05165B26D045FD00D8666B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA05165A26D045FD00D8666B /* Assets.xcassets */; };
 		FA05165E26D045FD00D8666B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA05165C26D045FD00D8666B /* LaunchScreen.storyboard */; };
-		FA05166826D1357C00D8666B /* ToDoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05166726D1357C00D8666B /* ToDoTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,7 +24,6 @@
 		FA05165A26D045FD00D8666B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA05165D26D045FD00D8666B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FA05165F26D045FD00D8666B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FA05166726D1357C00D8666B /* ToDoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +59,6 @@
 				FA05165126D045FA00D8666B /* AppDelegate.swift */,
 				FA05165326D045FA00D8666B /* SceneDelegate.swift */,
 				FA05165526D045FA00D8666B /* ToDoTableViewController.swift */,
-				FA05166726D1357C00D8666B /* ToDoTableViewCell.swift */,
 				FA05165726D045FA00D8666B /* Main.storyboard */,
 				FA05165A26D045FD00D8666B /* Assets.xcassets */,
 				FA05165C26D045FD00D8666B /* LaunchScreen.storyboard */,
@@ -143,7 +140,6 @@
 				FA05165626D045FA00D8666B /* ToDoTableViewController.swift in Sources */,
 				FA05165226D045FA00D8666B /* AppDelegate.swift in Sources */,
 				FA05165426D045FA00D8666B /* SceneDelegate.swift in Sources */,
-				FA05166826D1357C00D8666B /* ToDoTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

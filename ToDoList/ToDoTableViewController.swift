@@ -55,9 +55,9 @@ class ToDoTableViewController: UITableViewController {
    
     //MARK: - UITableViewDataDelegate
     // delegate to create an interaction UI with tableview
-    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-        print("Hi there\(indexPath)")
-        
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("Hi there")
+        tableView.backgroundColor = .cyan
     }
 }
 

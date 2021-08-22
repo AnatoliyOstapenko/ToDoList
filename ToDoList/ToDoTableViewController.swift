@@ -9,24 +9,24 @@ import UIKit
 
 // change UIViewController to UITableViewController (UITableViewDataSource and UITableViewDelegate included)
 class ToDoTableViewController: UITableViewController {
+    
+    // create defaults to use data persistence
+    let defaults = UserDefaults.standard
 
     
     // create array to use in table view
-    let itemArray: [String] = [
-        "one of the very few fiction films about Nazi",
-        "principally Witold Lesiewicz",
-        "The film’s self-questioning of its dramatic",
-        "Auschwitz from the point of view of a Nazi official"
-    ]
+    var itemArray: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        //retrieve a last data (array) after closing app from local data persistence
+        if let savedData = defaults.array(forKey: "ToDoKey") as? [String] {
+            itemArray = savedData
+        }
+
         // switch to Light Mode screen (avoid dark background table view)
         overrideUserInterfaceStyle = .light
-//        // Registers a class for use in creating new table cells.
-//        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ToDoCell")
 
     }
     //MARK: - UITableViewDataSource
@@ -81,6 +81,54 @@ class ToDoTableViewController: UITableViewController {
     
     @IBAction func addBarButtonPressed(_ sender: UIBarButtonItem) {
         
+        // create var textField to capture value from closure "alert.addTextField { (alertTextField) in"
+        var textField = UITextField()
+        
+        // create pop up alert message
+        let alert = UIAlertController(title: "Add ToDo Item", message: "", preferredStyle: .alert)
+        
+        // add mandatory next step. create action for alert message
+        let action = UIAlertAction(title: "\u{2705}", style: .default) { (action) in
+            
+            // All this happens when user click on button
+            // unwrap optional text from TextField
+            guard let newItem = textField.text else {
+                return
+            }
+            // add new item that user type to array
+            self.itemArray.append(newItem)
+            
+            // save last list of array properties
+            self.defaults.set(self.itemArray, forKey: "ToDoKey")
+            
+            // update array - reload data in table view to add a new row
+            self.tableView.reloadData()
+
+        }
+        
+        // create TextField in alert message to make user prints
+        alert.addTextField { (alertTextField) in
+
+            // create placeholder in TextField
+            alertTextField.placeholder = "create a new item"
+            textField = alertTextField
+            
+//            guard let item = alertTextField.text else {
+//                return
+//            }
+//
+//            // create Capture Value to get value from closure
+//            func getNewItem() -> String {
+//                return item
+//            }
+//            return getNewItem()
+        }
+        
+        // attaches an action object to the alert or action sheet.
+        alert.addAction(action)
+        
+        //activation alert and action
+        present(alert, animated: true, completion: nil)
         
     }
     

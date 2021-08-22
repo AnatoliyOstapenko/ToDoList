@@ -55,18 +55,35 @@ class ToDoTableViewController: UITableViewController {
    
     //MARK: - UITableViewDataDelegate
     
-    // delegate to create an interaction UI with tableview
+    // delegate to create an interaction UI with tableview, when user select row
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(itemArray[indexPath.row])
+        print("did select row: \(itemArray[indexPath.row])")
+
         
-        // add accessory mark in choosen row
-        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        // create let call to unwrap optional cellForRow
+        guard let cell = tableView.cellForRow(at: indexPath) else {
+            return
+        }
+        // set a mark accessory when user toggles a row and unmark when user untoggle a row
+        if cell.accessoryType == .checkmark {
+            cell.accessoryType = .none
+        } else {
+            cell.accessoryType = .checkmark
+        }
+
         
-        
-        // create animdted effect of deselecting row
+        // create animated effect of deselecting row
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
+    
+    //MARK: - Add New Items
+    
+    @IBAction func addBarButtonPressed(_ sender: UIBarButtonItem) {
+        
+        
+    }
+    
 }
 
 

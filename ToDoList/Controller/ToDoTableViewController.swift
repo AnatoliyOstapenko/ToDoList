@@ -20,15 +20,33 @@ class ToDoTableViewController: UITableViewController {
         super.viewDidLoad()
         
         //activate ToDoModel
-        var newItem = ToDoModel()
+        let newItem = ToDoModel()
         newItem.title = "First Line"
         newItem.done = true
         itemArray.append(newItem)
         
-        var newItem2 = ToDoModel()
+        let newItem2 = ToDoModel()
         newItem2.title = "Second Line"
-        newItem2.done = false
         itemArray.append(newItem2)
+        
+        let newItem3 = ToDoModel()
+        newItem3.title = "Third Line"
+        itemArray.append(newItem3)
+        
+        
+        itemArray.append(newItem2)
+        itemArray.append(newItem2)
+        itemArray.append(newItem2)
+        itemArray.append(newItem2)
+        itemArray.append(newItem2)
+        itemArray.append(newItem2)
+        itemArray.append(newItem2)
+        itemArray.append(newItem3)
+        itemArray.append(newItem3)
+        itemArray.append(newItem3)
+        itemArray.append(newItem3)
+        itemArray.append(newItem3)
+        itemArray.append(newItem3)
         
         
 //        //retrieve a last data from array after closing app from local data persistence
@@ -38,8 +56,6 @@ class ToDoTableViewController: UITableViewController {
 //            itemArray = item
 //    }
 
-        // switch to Light Mode screen (avoid dark background table view)
-        overrideUserInterfaceStyle = .light
 
     }
     //MARK: - UITableViewDataSource
@@ -56,19 +72,15 @@ class ToDoTableViewController: UITableViewController {
             // Returns a reusable table-view cell object for the specified reuse identifier and adds it to the table.
             let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath)
             
-            // create item to get acces to row in itemArray of Table View
-            let item = itemArray[indexPath.row]
-            
             // dispatch to default text label list of text from array
-            cell.textLabel?.text = item.title
+            cell.textLabel?.text = itemArray[indexPath.row].title
             
             // set a mark accessory when user toggles a row and unmark when user untoggle a row
-            if item.done == true {
+            if itemArray[indexPath.row].done == true {
                 cell.accessoryType = .checkmark
             } else {
                 cell.accessoryType = .none
             }
-            
             return cell
         }
    
@@ -77,14 +89,11 @@ class ToDoTableViewController: UITableViewController {
     // delegate to create an interaction UI with tableview, when user select row
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        // retrieve "done" from array by ToDoModel
-        var item = itemArray[indexPath.row].done
-        
         //change "done" on true or false when user select a row
-        if item == false {
-            item = true
+        if itemArray[indexPath.row].done == false {
+            itemArray[indexPath.row].done = true
         } else {
-            item = false
+            itemArray[indexPath.row].done = false
         }
         
         // reload data in table view to change "done"
@@ -92,6 +101,7 @@ class ToDoTableViewController: UITableViewController {
         
         // create animated effect of deselecting row
         tableView.deselectRow(at: indexPath, animated: true)
+      
         
     }
     
@@ -109,19 +119,18 @@ class ToDoTableViewController: UITableViewController {
         let action = UIAlertAction(title: "\u{2705}", style: .default) { (action) in
             
             // MARK: - All this happens when user click on button
-            // unwrap optional text from TextField
-            guard let newItem = textField.text else {
-                return
-            }
             
             //set a new item to initialize struct ToDoModel
-            var toDoModel = ToDoModel()
+            let item = ToDoModel()
+            
+            // unwrap optional text from TextField
+            guard let piece = textField.text else { return }
             
             //get from text field by newItem what user printed
-            toDoModel.title = newItem
+            item.title = piece
             
             // add new printed text further that user type to array
-            self.itemArray.append(toDoModel)
+            self.itemArray.append(item)
             
             // save last data (array properties)
             self.defaults.set(self.itemArray, forKey: "ToDoKey")

@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct ToDoModel {
+class ToDoModel {
     
     var title: String = ""
-    var done: Bool = true
+    var done: Bool = false
     
     
 }

@@ -13,16 +13,16 @@ class ToDoTableViewController: UITableViewController {
     // create array to initialize for using in table view
     var itemArray = [ToDoModel]()
     
-    // create defaults to use data persistence
-    let defaults = UserDefaults.standard
+    //intialize File Manager to interact with the file system
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("item.plist")
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //activate ToDoModel
         let newItem = ToDoModel()
         newItem.title = "First Line"
-        newItem.done = true
         itemArray.append(newItem)
         
         let newItem2 = ToDoModel()
@@ -32,25 +32,9 @@ class ToDoTableViewController: UITableViewController {
         let newItem3 = ToDoModel()
         newItem3.title = "Third Line"
         itemArray.append(newItem3)
-        
-        
-        itemArray.append(newItem2)
-        itemArray.append(newItem2)
-        itemArray.append(newItem2)
-        itemArray.append(newItem2)
-        itemArray.append(newItem2)
-        itemArray.append(newItem2)
-        itemArray.append(newItem2)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        itemArray.append(newItem3)
-        
-        
+
 //        //retrieve a last data from array after closing app from local data persistence
-//        if let item = defaults.array(forKey: "ToDoKey") as? [String] {
+//        if let item = defaults.array(forKey: "ToDoKey") as? [ToDoModel] {
 //
 //            //dispatch data to array
 //            itemArray = item
@@ -78,12 +62,10 @@ class ToDoTableViewController: UITableViewController {
             // dispatch to default text label list of text from array
             cell.textLabel?.text = item.title
             
-            // set a mark accessory when user toggles a row and unmark when user untoggle a row
-            if item.done == true {
-                cell.accessoryType = .checkmark
-            } else {
-                cell.accessoryType = .none
-            }
+            //Ternary operator ==> instead of if let statement
+            // value which has to be changed = condition ? if value true : else value false
+            cell.accessoryType = item.done ? .checkmark : .none
+            
             return cell
         }
    
@@ -95,13 +77,10 @@ class ToDoTableViewController: UITableViewController {
         //create item to dispatch itemArray[indexPath.row]
         let item = itemArray[indexPath.row]
         
-        //change "done" on true or false when user select a row
-        if item.done == false {
-            item.done = true
-        } else {
-            item.done = false
-        }
-        
+        // set opposite equation instead of if else statement
+        // if "done" is true it is changed on false, and opposite
+        item.done = !item.done
+                
         // reload data in table view to change "done"
         tableView.reloadData()
         
@@ -130,19 +109,16 @@ class ToDoTableViewController: UITableViewController {
             let item = ToDoModel()
             
             // unwrap optional text from TextField
-            guard let piece = textField.text else { return }
+            guard let newItem = textField.text else { return }
             
             //get from text field by newItem what user printed
-            item.title = piece
+            item.title = newItem
             
             // add new printed text further that user type to array
             self.itemArray.append(item)
             
-            // save last data (array properties)
-            self.defaults.set(self.itemArray, forKey: "ToDoKey")
-            
-            // update array - reload data in table view to add a new row
-            self.tableView.reloadData()
+            // save data
+            self.saveItem()
 
         }
         
@@ -162,6 +138,29 @@ class ToDoTableViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
         
     }
+    
+    // MARK: - Model Manipulation Methods
+    
+    //function to save data locally
+    func saveItem() {
+        
+        //initialie encoder
+        let encoder = PropertyListEncoder()
+        
+        //encoding item array
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        } catch {
+            print("error encoding item array")
+        }
+        
+        
+        // update array - reload data in table view to add a new row
+        self.tableView.reloadData()
+        
+    }
+    
     
 }
 

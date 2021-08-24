@@ -7,7 +7,8 @@
 
 import Foundation
 
-class ToDoModel {
+// add Encodable protocol to use encoding item array
+class ToDoModel: Encodable {
     
     var title: String = ""
     var done: Bool = false

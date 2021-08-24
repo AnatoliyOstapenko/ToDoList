@@ -72,11 +72,14 @@ class ToDoTableViewController: UITableViewController {
             // Returns a reusable table-view cell object for the specified reuse identifier and adds it to the table.
             let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath)
             
+            //create item to dispatch itemArray[indexPath.row]
+            let item = itemArray[indexPath.row]
+            
             // dispatch to default text label list of text from array
-            cell.textLabel?.text = itemArray[indexPath.row].title
+            cell.textLabel?.text = item.title
             
             // set a mark accessory when user toggles a row and unmark when user untoggle a row
-            if itemArray[indexPath.row].done == true {
+            if item.done == true {
                 cell.accessoryType = .checkmark
             } else {
                 cell.accessoryType = .none
@@ -89,11 +92,14 @@ class ToDoTableViewController: UITableViewController {
     // delegate to create an interaction UI with tableview, when user select row
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        //create item to dispatch itemArray[indexPath.row]
+        let item = itemArray[indexPath.row]
+        
         //change "done" on true or false when user select a row
-        if itemArray[indexPath.row].done == false {
-            itemArray[indexPath.row].done = true
+        if item.done == false {
+            item.done = true
         } else {
-            itemArray[indexPath.row].done = false
+            item.done = false
         }
         
         // reload data in table view to change "done"

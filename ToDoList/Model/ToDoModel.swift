@@ -7,8 +7,8 @@
 
 import Foundation
 
-// add Encodable protocol to use encoding item array
-class ToDoModel: Encodable {
+// add Codable (Encodable, Decodable included) protocol to use save and load locally item array
+class ToDoModel: Codable {
     
     var title: String = ""
     var done: Bool = false

@@ -13,33 +13,15 @@ class ToDoTableViewController: UITableViewController {
     // create array to initialize for using in table view
     var itemArray = [ToDoModel]()
     
-    //intialize File Manager to interact with the file system
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("item.plist")
+    //intialize File Manager to interact with the file system (save and load data)
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ToDoModel.plist")
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //activate ToDoModel
-        let newItem = ToDoModel()
-        newItem.title = "First Line"
-        itemArray.append(newItem)
-        
-        let newItem2 = ToDoModel()
-        newItem2.title = "Second Line"
-        itemArray.append(newItem2)
-        
-        let newItem3 = ToDoModel()
-        newItem3.title = "Third Line"
-        itemArray.append(newItem3)
-
-//        //retrieve a last data from array after closing app from local data persistence
-//        if let item = defaults.array(forKey: "ToDoKey") as? [ToDoModel] {
-//
-//            //dispatch data to array
-//            itemArray = item
-//    }
-
+        // load last saved data from local resources
+        loadData()
 
     }
     //MARK: - UITableViewDataSource
@@ -80,9 +62,9 @@ class ToDoTableViewController: UITableViewController {
         // set opposite equation instead of if else statement
         // if "done" is true it is changed on false, and opposite
         item.done = !item.done
-                
-        // reload data in table view to change "done"
-        tableView.reloadData()
+        
+        // save data locally
+        saveData()
         
         // create animated effect of deselecting row
         tableView.deselectRow(at: indexPath, animated: true)
@@ -118,7 +100,7 @@ class ToDoTableViewController: UITableViewController {
             self.itemArray.append(item)
             
             // save data
-            self.saveItem()
+            self.saveData()
 
         }
         
@@ -141,23 +123,35 @@ class ToDoTableViewController: UITableViewController {
     
     // MARK: - Model Manipulation Methods
     
-    //function to save data locally
-    func saveItem() {
+    // function to save data locally (Codable protocol)
+    func saveData() {
         
         //initialie encoder
         let encoder = PropertyListEncoder()
         
         //encoding item array
         do {
+            
             let data = try encoder.encode(itemArray)
             try data.write(to: dataFilePath!)
-        } catch {
-            print("error encoding item array")
-        }
-        
-        
+            
+        } catch { print(error.localizedDescription)}
+
         // update array - reload data in table view to add a new row
         self.tableView.reloadData()
+        
+    }
+    // function to load data from local data source (Decodable protocol)
+    func loadData() {
+        
+        // function to load data locally
+        do {
+            let data = try Data(contentsOf: dataFilePath!)
+            let decoder = PropertyListDecoder()
+            itemArray = try decoder.decode([ToDoModel].self, from: data)
+            
+        } catch { print(error.localizedDescription)}
+        
         
     }
     

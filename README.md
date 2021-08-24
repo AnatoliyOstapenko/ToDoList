@@ -14,5 +14,7 @@
 
 :heavy_check_mark: Data Persistence
 
+:heavy_check_mark: Ternary Operator
+
 
 

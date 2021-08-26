@@ -16,15 +16,19 @@ class ToDoTableViewController: UITableViewController {
     
     //intialize File Manager to interact with the file system (save and load data)
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ToDoModel.plist")
+    
+    // create context CoreData from AppDelegate
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // load last saved data from local resources
-        loadData()
+//        loadData()
 
     }
+    
     //MARK: - UITableViewDataSource
     
         // set numbers of rows in TableView
@@ -69,8 +73,7 @@ class ToDoTableViewController: UITableViewController {
         
         // create animated effect of deselecting row
         tableView.deselectRow(at: indexPath, animated: true)
-      
-        
+   
     }
     
     //MARK: - Add New Items
@@ -88,8 +91,8 @@ class ToDoTableViewController: UITableViewController {
             
             // MARK: - All this happens when user click on button
             
-            //set a new item to initialize struct ToDoModel
-            let item = ToDoModel()
+            //set a new item to initialize public class ToDoModel from CoreData and transfer context
+            let item = ToDoModel(context: self.context)
             
             // unwrap optional text from TextField
             guard let newItem = textField.text else { return }
@@ -124,37 +127,29 @@ class ToDoTableViewController: UITableViewController {
     
     // MARK: - Model Manipulation Methods
     
-    // function to save data locally (Codable protocol)
+    // function to save data locally
     func saveData() {
-        
-        //initialie encoder
-        let encoder = PropertyListEncoder()
-        
-        //encoding item array
-        do {
-            
-            let data = try encoder.encode(itemArray)
-            try data.write(to: dataFilePath!)
-            
-        } catch { print(error.localizedDescription)}
 
-        // update array - reload data in table view to add a new row
-        self.tableView.reloadData()
+        do {
+            try context.save()
+        } catch { print(error.localizedDescription) }
+
+        
         
     }
     // function to load data from local data source (Decodable protocol)
-    func loadData() {
-        
-        // function to load data locally
-        do {
-            let data = try Data(contentsOf: dataFilePath!)
-            let decoder = PropertyListDecoder()
-            itemArray = try decoder.decode([ToDoModel].self, from: data)
-            
-        } catch { print(error.localizedDescription)}
-        
-        
-    }
+//    func loadData() {
+//
+//        // function to load data locally
+//        do {
+//            let data = try Data(contentsOf: dataFilePath!)
+//            let decoder = PropertyListDecoder()
+//            itemArray = try decoder.decode([ToDoModel].self, from: data)
+//
+//        } catch { print(error.localizedDescription)}
+//
+//
+//    }
     
     
 }

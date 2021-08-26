@@ -14,7 +14,6 @@
 		FA05165B26D045FD00D8666B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA05165A26D045FD00D8666B /* Assets.xcassets */; };
 		FA05165E26D045FD00D8666B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA05165C26D045FD00D8666B /* LaunchScreen.storyboard */; };
 		FAAC552A26D58CB6004BBF37 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FAAC552826D58CB6004BBF37 /* CoreDataModel.xcdatamodeld */; };
-		FADEA80B26D3E6830095D678 /* ToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADEA80A26D3E6830095D678 /* ToDoModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +26,6 @@
 		FA05165D26D045FD00D8666B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FA05165F26D045FD00D8666B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FAAC552926D58CB6004BBF37 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
-		FADEA80A26D3E6830095D678 /* ToDoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,7 +89,6 @@
 		FADEA81026D3E6A60095D678 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				FADEA80A26D3E6830095D678 /* ToDoModel.swift */,
 				FAAC552826D58CB6004BBF37 /* CoreDataModel.xcdatamodeld */,
 			);
 			path = Model;
@@ -168,7 +165,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA05165626D045FA00D8666B /* ToDoTableViewController.swift in Sources */,
-				FADEA80B26D3E6830095D678 /* ToDoModel.swift in Sources */,
 				FA05165226D045FA00D8666B /* AppDelegate.swift in Sources */,
 				FA05165426D045FA00D8666B /* SceneDelegate.swift in Sources */,
 				FAAC552A26D58CB6004BBF37 /* CoreDataModel.xcdatamodeld in Sources */,

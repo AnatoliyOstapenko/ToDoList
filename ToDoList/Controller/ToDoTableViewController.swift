@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 
 // change UIViewController to UITableViewController (UITableViewDataSource and UITableViewDelegate included)
@@ -13,6 +14,7 @@ class ToDoTableViewController: UITableViewController {
     
     // create array to initialize for using in table view
     var itemArray = [ToDoModel]()
+
     
     //intialize File Manager to interact with the file system (save and load data)
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ToDoModel.plist")
@@ -26,6 +28,8 @@ class ToDoTableViewController: UITableViewController {
         
         // load last saved data from local resources
 //        loadData()
+        // switch to Light Mode screen (avoid dark background table view)
+        overrideUserInterfaceStyle = .light
 
     }
     
@@ -89,7 +93,7 @@ class ToDoTableViewController: UITableViewController {
         // add mandatory next step. create action for alert message
         let action = UIAlertAction(title: "\u{2705}", style: .default) { (action) in
             
-            // MARK: - All this happens when user click on button
+            // MARK: - All this happens when user click on UIAlertAction button
             
             //set a new item to initialize public class ToDoModel from CoreData and transfer context
             let item = ToDoModel(context: self.context)
@@ -97,17 +101,24 @@ class ToDoTableViewController: UITableViewController {
             // unwrap optional text from TextField
             guard let newItem = textField.text else { return }
             
-            //get from text field by newItem what user printed
+            //assign "title" get from text field by newItem what user printed
             item.title = newItem
+            
+            //assign "done" false by default
+            item.done = false
             
             // add new printed text further that user type to array
             self.itemArray.append(item)
+            
+            // update UI so that the appended item appears
+            self.tableView.reloadData()
             
             // save data
             self.saveData()
 
         }
         
+        // MARK: - It should happen when user click on addBarButtonPressed
         // create TextField in alert message to make user prints
         alert.addTextField { (alertTextField) in
 

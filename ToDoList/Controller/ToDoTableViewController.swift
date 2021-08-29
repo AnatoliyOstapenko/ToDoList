@@ -12,24 +12,31 @@ import CoreData
 // change UIViewController to UITableViewController (UITableViewDataSource and UITableViewDelegate included)
 class ToDoTableViewController: UITableViewController {
     
+    @IBOutlet weak var todoSearchBar: UISearchBar!
+    
+    
     // create array to initialize for using in table view
     var itemArray = [ToDoModel]()
 
     
-    //intialize File Manager to interact with the file system (save and load data)
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ToDoModel.plist")
-    
-    // create context CoreData from AppDelegate
+    // initialize context CoreData from AppDelegate to interact with View Controller
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // load last saved data from local resources
-//        loadData()
+        // create request to retrieve data from a persistent store
+        let request: NSFetchRequest <ToDoModel> = ToDoModel.fetchRequest()
+
+        // load last saved data from Core Data
+        loadData(with: request)
+        
         // switch to Light Mode screen (avoid dark background table view)
         overrideUserInterfaceStyle = .light
+        
+        // initialize UISearchBarDelegate
+        todoSearchBar.delegate = self
 
     }
     
@@ -60,7 +67,8 @@ class ToDoTableViewController: UITableViewController {
             return cell
         }
    
-    //MARK: - UITableViewDataDelegate
+    // MARK: - UITableViewDataDelegate
+    // MARK: - It happens when user click on any row:
     
     // delegate to create an interaction UI with tableview, when user select row
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -68,11 +76,20 @@ class ToDoTableViewController: UITableViewController {
         //create item to dispatch itemArray[indexPath.row]
         let item = itemArray[indexPath.row]
         
+        // remove row from Core Data
+        context.delete(item)
+        
+        // remove row from array
+        itemArray.remove(at: indexPath.row)
+        
         // set opposite equation instead of if else statement
         // if "done" is true it is changed on false, and opposite
         item.done = !item.done
         
-        // save data locally
+        // update UI so that the appended item appears
+        tableView.reloadData()
+        
+        // save data in Core Data
         saveData()
         
         // create animated effect of deselecting row
@@ -109,12 +126,12 @@ class ToDoTableViewController: UITableViewController {
             
             // add new printed text further that user type to array
             self.itemArray.append(item)
+
+            // save data
+            self.saveData()
             
             // update UI so that the appended item appears
             self.tableView.reloadData()
-            
-            // save data
-            self.saveData()
 
         }
         
@@ -124,6 +141,8 @@ class ToDoTableViewController: UITableViewController {
 
             // create placeholder in TextField
             alertTextField.placeholder = "create a new item"
+            
+            // dispatch typed data by user to TextField
             textField = alertTextField
             
         }
@@ -136,7 +155,7 @@ class ToDoTableViewController: UITableViewController {
         
     }
     
-    // MARK: - Model Manipulation Methods
+    // MARK: - Core Data
     
     // function to save data locally
     func saveData() {
@@ -144,24 +163,45 @@ class ToDoTableViewController: UITableViewController {
         do {
             try context.save()
         } catch { print(error.localizedDescription) }
-
-        
         
     }
-    // function to load data from local data source (Decodable protocol)
-//    func loadData() {
-//
-//        // function to load data locally
-//        do {
-//            let data = try Data(contentsOf: dataFilePath!)
-//            let decoder = PropertyListDecoder()
-//            itemArray = try decoder.decode([ToDoModel].self, from: data)
-//
-//        } catch { print(error.localizedDescription)}
-//
-//
-//    }
     
+    // function to load data from Core Data
+    func loadData(with request: NSFetchRequest <ToDoModel>) {
+        
+        // retrive data request
+        do {
+            itemArray = try context.fetch(request)
+        } catch { print(error.localizedDescription) }
+
+    }
+
+}
+
+// MARK: - UISearchBarDelegate protocol
+extension ToDoTableViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        // create request to retrieve data from a persistent store
+        let request: NSFetchRequest <ToDoModel> = ToDoModel.fetchRequest()
+        
+        // unwrap text from search bar that was typed by user
+        guard let text = searchBar.text else { return }
+
+        //compare text from search bar with "title" Core Data
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", text)
+        
+        // create property to arrange "title" by ascending
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        // retrieve data by request
+        loadData(with: request)
+        
+        // reload UI
+        tableView.reloadData()
+        
+    }
     
 }
 

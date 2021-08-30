@@ -25,12 +25,9 @@ class ToDoTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // create request to retrieve data from a persistent store
-        let request: NSFetchRequest <ToDoModel> = ToDoModel.fetchRequest()
 
         // load last saved data from Core Data
-        loadData(with: request)
+        loadData()
         
         // switch to Light Mode screen (avoid dark background table view)
         overrideUserInterfaceStyle = .light
@@ -86,9 +83,6 @@ class ToDoTableViewController: UITableViewController {
         // if "done" is true it is changed on false, and opposite
         item.done = !item.done
         
-        // update UI so that the appended item appears
-        tableView.reloadData()
-        
         // save data in Core Data
         saveData()
         
@@ -129,9 +123,6 @@ class ToDoTableViewController: UITableViewController {
 
             // save data
             self.saveData()
-            
-            // update UI so that the appended item appears
-            self.tableView.reloadData()
 
         }
         
@@ -164,21 +155,26 @@ class ToDoTableViewController: UITableViewController {
             try context.save()
         } catch { print(error.localizedDescription) }
         
+        tableView.reloadData()
+        
     }
     
     // function to load data from Core Data
-    func loadData(with request: NSFetchRequest <ToDoModel>) {
+    func loadData(with request: NSFetchRequest <ToDoModel> = ToDoModel.fetchRequest()) {
         
         // retrive data request
         do {
             itemArray = try context.fetch(request)
         } catch { print(error.localizedDescription) }
+        
+        tableView.reloadData()
 
     }
 
 }
 
 // MARK: - UISearchBarDelegate protocol
+
 extension ToDoTableViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -201,6 +197,16 @@ extension ToDoTableViewController: UISearchBarDelegate {
         // reload UI
         tableView.reloadData()
         
+
+        
+    }
+    // It happens when text is cleared from the search text field
+    func searchBar(_ searchBar: UISearchBar, textDidChange: String) {
+        
+        if searchBar.text?.count == 0 {
+            loadData()
+            
+        }
     }
     
 }

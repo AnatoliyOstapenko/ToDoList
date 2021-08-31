@@ -82,12 +82,12 @@ class ToDoTableViewController: UITableViewController {
         
         //create item to dispatch itemArray[indexPath.row]
         let item = itemArray[indexPath.row]
-        
-        // remove row from Core Data
-        context.delete(item)
-        
-        // remove row from array
-        itemArray.remove(at: indexPath.row)
+
+//        // remove row from Core Data
+//        context.delete(item)
+//
+//        // remove row from array
+//        itemArray.remove(at: indexPath.row)
         
         // set opposite equation instead of if else statement
         // if "done" is true it is changed on false, and opposite
@@ -174,11 +174,19 @@ class ToDoTableViewController: UITableViewController {
     }
     
     // function to load data from Core Data
-    func loadData(with request: NSFetchRequest <ToDoModel> = ToDoModel.fetchRequest()) {
+    func loadData(with request: NSFetchRequest <ToDoModel> = ToDoModel.fetchRequest(), predicate: NSPredicate? = nil) {
         
-        // //compare text with "name" in Core Data
-        let predicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-        request.predicate = predicate
+        // compare text with "name" in Core Data
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        
+        if let additionalPredicate = predicate {
+            
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate ,additionalPredicate])
+            
+        } else {
+            
+            request.predicate = categoryPredicate
+        }
         
         // retrive data request
         do {
@@ -208,13 +216,13 @@ extension ToDoTableViewController: UISearchBarDelegate {
         guard let text = searchBar.text else { return }
 
         //compare text from search bar with "title" Core Data
-        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", text)
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", text)
         
         // create property to arrange "title" by ascending
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
         // retrieve data by request
-        loadData(with: request)
+        loadData(with: request, predicate: predicate)
         
         // reload UI
         tableView.reloadData()

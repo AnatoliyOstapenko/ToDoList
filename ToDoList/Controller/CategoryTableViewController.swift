@@ -59,20 +59,10 @@ class CategoryTableViewController: UITableViewController {
         // create animated effect of deselecting row
         tableView.deselectRow(at: indexPath, animated: true)
         
-        
-//        //create item to dispatch itemArray[indexPath.row]
-//        let item = array[indexPath.row]
-        
-//        // remove row from Core Data
-//        context.delete(item)
-//
-//        // remove row from array
-//        array.remove(at: indexPath.row)
-        
         // save data in Core Data
         saveData()
         
-        
+  // MARK: - UIStoryboardSegue prepare
    
     }
     // prepare before switch on the next UI screen (to transfer data from current VC to the next VC)

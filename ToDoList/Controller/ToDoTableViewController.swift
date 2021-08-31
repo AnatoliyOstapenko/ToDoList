@@ -12,11 +12,21 @@ import CoreData
 // change UIViewController to UITableViewController (UITableViewDataSource and UITableViewDelegate included)
 class ToDoTableViewController: UITableViewController {
     
+    
     @IBOutlet weak var todoSearchBar: UISearchBar!
     
     
     // create array to initialize for using in table view
     var itemArray = [ToDoModel]()
+    
+    //create Computed property to fetch information from CategoryVC
+    var selectedCategory: Category? {
+        didSet {
+            
+            // load last saved data from Core Data
+            loadData()
+        }
+    }
 
     
     // initialize context CoreData from AppDelegate to interact with View Controller
@@ -26,8 +36,7 @@ class ToDoTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // load last saved data from Core Data
-        loadData()
+        
         
         // switch to Light Mode screen (avoid dark background table view)
         overrideUserInterfaceStyle = .light
@@ -65,7 +74,8 @@ class ToDoTableViewController: UITableViewController {
         }
    
     // MARK: - UITableViewDataDelegate
-    // MARK: - It happens when user click on any row:
+    
+    // It happens when user click on any row:
     
     // delegate to create an interaction UI with tableview, when user select row
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -104,7 +114,7 @@ class ToDoTableViewController: UITableViewController {
         // add mandatory next step. create action for alert message
         let action = UIAlertAction(title: "\u{2705}", style: .default) { (action) in
             
-            // MARK: - All this happens when user click on UIAlertAction button
+            //All this happens when user click on UIAlertAction button:
             
             //set a new item to initialize public class ToDoModel from CoreData and transfer context
             let item = ToDoModel(context: self.context)
@@ -118,6 +128,9 @@ class ToDoTableViewController: UITableViewController {
             //assign "done" false by default
             item.done = false
             
+            //assign relationships in Core Data
+            item.parentCategory = self.selectedCategory
+            
             // add new printed text further that user type to array
             self.itemArray.append(item)
 
@@ -126,7 +139,8 @@ class ToDoTableViewController: UITableViewController {
 
         }
         
-        // MARK: - It should happen when user click on addBarButtonPressed
+        // It should happen when user click on addBarButtonPressed:
+        
         // create TextField in alert message to make user prints
         alert.addTextField { (alertTextField) in
 
@@ -162,12 +176,20 @@ class ToDoTableViewController: UITableViewController {
     // function to load data from Core Data
     func loadData(with request: NSFetchRequest <ToDoModel> = ToDoModel.fetchRequest()) {
         
+        // //compare text with "name" in Core Data
+        let predicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        request.predicate = predicate
+        
         // retrive data request
         do {
             itemArray = try context.fetch(request)
         } catch { print(error.localizedDescription) }
         
+        // update UI
         tableView.reloadData()
+        
+        // hide keyboard
+        tableView.endEditing(true)
 
     }
 
@@ -196,18 +218,27 @@ extension ToDoTableViewController: UISearchBarDelegate {
         
         // reload UI
         tableView.reloadData()
-        
-
-        
+   
     }
     // It happens when text is cleared from the search text field
     func searchBar(_ searchBar: UISearchBar, textDidChange: String) {
         
+        // it triggered when search bar is clear after typing
         if searchBar.text?.count == 0 {
+            
             loadData()
+
+            //
+//            DispatchQueue.main.async {
+//                //
+//                searchBar.resignFirstResponder()
+//            }
             
         }
+        
     }
+    
+    
     
 }
 

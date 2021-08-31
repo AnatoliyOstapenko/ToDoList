@@ -14,6 +14,7 @@
 		FA05165B26D045FD00D8666B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA05165A26D045FD00D8666B /* Assets.xcassets */; };
 		FA05165E26D045FD00D8666B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA05165C26D045FD00D8666B /* LaunchScreen.storyboard */; };
 		FAAC552A26D58CB6004BBF37 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FAAC552826D58CB6004BBF37 /* CoreDataModel.xcdatamodeld */; };
+		FAF067D226DD5841000A3357 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF067D126DD5841000A3357 /* CategoryTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		FA05165D26D045FD00D8666B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FA05165F26D045FD00D8666B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FAAC552926D58CB6004BBF37 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
+		FAF067D126DD5841000A3357 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 		FADEA80E26D3E6990095D678 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				FAF067D126DD5841000A3357 /* CategoryTableViewController.swift */,
 				FA05165526D045FA00D8666B /* ToDoTableViewController.swift */,
 			);
 			path = Controller;
@@ -166,6 +169,7 @@
 			files = (
 				FA05165626D045FA00D8666B /* ToDoTableViewController.swift in Sources */,
 				FA05165226D045FA00D8666B /* AppDelegate.swift in Sources */,
+				FAF067D226DD5841000A3357 /* CategoryTableViewController.swift in Sources */,
 				FA05165426D045FA00D8666B /* SceneDelegate.swift in Sources */,
 				FAAC552A26D58CB6004BBF37 /* CoreDataModel.xcdatamodeld in Sources */,
 			);

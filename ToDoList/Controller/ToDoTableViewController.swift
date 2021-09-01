@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import RealmSwift
 
 
 // change UIViewController to UITableViewController (UITableViewDataSource and UITableViewDelegate included)

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,8 @@
 		FA05165926D045FA00D8666B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA05165726D045FA00D8666B /* Main.storyboard */; };
 		FA05165B26D045FD00D8666B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA05165A26D045FD00D8666B /* Assets.xcassets */; };
 		FA05165E26D045FD00D8666B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA05165C26D045FD00D8666B /* LaunchScreen.storyboard */; };
+		FAA341FE26E16DF100E2B3F6 /* ToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA341FD26E16DF100E2B3F6 /* ToDoModel.swift */; };
+		FAA3420126E16E0800E2B3F6 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA3420026E16E0800E2B3F6 /* Category.swift */; };
 		FAAC552A26D58CB6004BBF37 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FAAC552826D58CB6004BBF37 /* CoreDataModel.xcdatamodeld */; };
 		FAF067D226DD5841000A3357 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF067D126DD5841000A3357 /* CategoryTableViewController.swift */; };
 /* End PBXBuildFile section */
@@ -30,6 +32,8 @@
 		FA05165A26D045FD00D8666B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FA05165D26D045FD00D8666B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FA05165F26D045FD00D8666B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FAA341FD26E16DF100E2B3F6 /* ToDoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoModel.swift; sourceTree = "<group>"; };
+		FAA3420026E16E0800E2B3F6 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		FAAC552926D58CB6004BBF37 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		FAF067D126DD5841000A3357 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -52,7 +56,6 @@
 				7E43C946ABEDC70A0B7BEBED /* Pods-ToDoList.debug.xcconfig */,
 				B83C4E18C755CC5A1F90E570 /* Pods-ToDoList.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -118,6 +121,8 @@
 			isa = PBXGroup;
 			children = (
 				FAAC552826D58CB6004BBF37 /* CoreDataModel.xcdatamodeld */,
+				FAA341FD26E16DF100E2B3F6 /* ToDoModel.swift */,
+				FAA3420026E16E0800E2B3F6 /* Category.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -241,6 +246,8 @@
 				FAF067D226DD5841000A3357 /* CategoryTableViewController.swift in Sources */,
 				FA05165426D045FA00D8666B /* SceneDelegate.swift in Sources */,
 				FAAC552A26D58CB6004BBF37 /* CoreDataModel.xcdatamodeld in Sources */,
+				FAA341FE26E16DF100E2B3F6 /* ToDoModel.swift in Sources */,
+				FAA3420126E16E0800E2B3F6 /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

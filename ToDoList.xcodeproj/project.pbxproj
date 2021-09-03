@@ -16,7 +16,6 @@
 		FA05165E26D045FD00D8666B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA05165C26D045FD00D8666B /* LaunchScreen.storyboard */; };
 		FAA341FE26E16DF100E2B3F6 /* ToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA341FD26E16DF100E2B3F6 /* ToDoModel.swift */; };
 		FAA3420126E16E0800E2B3F6 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA3420026E16E0800E2B3F6 /* Category.swift */; };
-		FAAC552A26D58CB6004BBF37 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FAAC552826D58CB6004BBF37 /* CoreDataModel.xcdatamodeld */; };
 		FAF067D226DD5841000A3357 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF067D126DD5841000A3357 /* CategoryTableViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -34,7 +33,6 @@
 		FA05165F26D045FD00D8666B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FAA341FD26E16DF100E2B3F6 /* ToDoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoModel.swift; sourceTree = "<group>"; };
 		FAA3420026E16E0800E2B3F6 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
-		FAAC552926D58CB6004BBF37 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		FAF067D126DD5841000A3357 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -120,7 +118,6 @@
 		FADEA81026D3E6A60095D678 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				FAAC552826D58CB6004BBF37 /* CoreDataModel.xcdatamodeld */,
 				FAA341FD26E16DF100E2B3F6 /* ToDoModel.swift */,
 				FAA3420026E16E0800E2B3F6 /* Category.swift */,
 			);
@@ -245,7 +242,6 @@
 				FA05165226D045FA00D8666B /* AppDelegate.swift in Sources */,
 				FAF067D226DD5841000A3357 /* CategoryTableViewController.swift in Sources */,
 				FA05165426D045FA00D8666B /* SceneDelegate.swift in Sources */,
-				FAAC552A26D58CB6004BBF37 /* CoreDataModel.xcdatamodeld in Sources */,
 				FAA341FE26E16DF100E2B3F6 /* ToDoModel.swift in Sources */,
 				FAA3420126E16E0800E2B3F6 /* Category.swift in Sources */,
 			);
@@ -451,19 +447,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		FAAC552826D58CB6004BBF37 /* CoreDataModel.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				FAAC552926D58CB6004BBF37 /* CoreDataModel.xcdatamodel */,
-			);
-			currentVersion = FAAC552926D58CB6004BBF37 /* CoreDataModel.xcdatamodel */;
-			path = CoreDataModel.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = FA05164626D045FA00D8666B /* Project object */;
 }

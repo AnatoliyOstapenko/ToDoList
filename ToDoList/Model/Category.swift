@@ -6,3 +6,16 @@
 //
 
 import Foundation
+import RealmSwift
+
+// create superclass RealmSwiftObject
+class Category: Object {
+    @objc dynamic var name: String = ""
+    
+    // define to-many relationships (one and more relationships)
+    let itemToDoModel = List <ToDoModel>()
+
+    
+}
+
+

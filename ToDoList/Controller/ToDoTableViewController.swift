@@ -7,7 +7,7 @@
 
 import UIKit
 import CoreData
-import RealmSwift
+
 
 
 // change UIViewController to UITableViewController (UITableViewDataSource and UITableViewDelegate included)
@@ -25,7 +25,7 @@ class ToDoTableViewController: UITableViewController {
         didSet {
             
             // load last saved data from Core Data
-            loadData()
+//            loadData()
         }
     }
 
@@ -43,7 +43,7 @@ class ToDoTableViewController: UITableViewController {
         overrideUserInterfaceStyle = .light
         
         // initialize UISearchBarDelegate
-        todoSearchBar.delegate = self
+//        todoSearchBar.delegate = self
 
     }
     
@@ -117,23 +117,23 @@ class ToDoTableViewController: UITableViewController {
             
             //All this happens when user click on UIAlertAction button:
             
-            //set a new item to initialize public class ToDoModel from CoreData and transfer context
-            let item = ToDoModel(context: self.context)
-            
-            // unwrap optional text from TextField
-            guard let newItem = textField.text else { return }
-            
-            //assign "title" get from text field by newItem what user printed
-            item.title = newItem
-            
-            //assign "done" false by default
-            item.done = false
-            
-            //assign relationships in Core Data
-            item.parentCategory = self.selectedCategory
-            
-            // add new printed text further that user type to array
-            self.itemArray.append(item)
+//            //set a new item to initialize public class ToDoModel from CoreData and transfer context
+//            let item = ToDoModel(context: self.context)
+//
+//            // unwrap optional text from TextField
+//            guard let newItem = textField.text else { return }
+//
+//            //assign "title" get from text field by newItem what user printed
+//            item.title = newItem
+//
+//            //assign "done" false by default
+//            item.done = false
+//
+//            //assign relationships in Core Data
+//            item.parentCategory = self.selectedCategory
+//
+//            // add new printed text further that user type to array
+//            self.itemArray.append(item)
 
             // save data
             self.saveData()
@@ -161,7 +161,7 @@ class ToDoTableViewController: UITableViewController {
         
     }
     
-    // MARK: - Core Data
+    // MARK: - Realm Data
     
     // function to save data locally
     func saveData() {
@@ -174,68 +174,68 @@ class ToDoTableViewController: UITableViewController {
         
     }
     
-    // function to load data from Core Data
-    func loadData(with request: NSFetchRequest <ToDoModel> = ToDoModel.fetchRequest(), predicate: NSPredicate? = nil) {
-        
-        // compare text with "name" in Core Data
-        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-        
-        if let additionalPredicate = predicate {
-            
-            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate ,additionalPredicate])
-            
-        } else {
-            
-            request.predicate = categoryPredicate
-        }
-        
-        // retrive data request
-        do {
-            itemArray = try context.fetch(request)
-        } catch { print(error.localizedDescription) }
-        
-        // update UI
-        tableView.reloadData()
-        
-        // hide keyboard
-        tableView.endEditing(true)
-
-    }
-
+//    // function to load data
+//    func loadData(with request: NSFetchRequest <ToDoModel> = ToDoModel.fetchRequest(), predicate: NSPredicate? = nil) {
+//
+//        // compare text with "name" in Core Data
+//        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+//
+//        if let additionalPredicate = predicate {
+//
+//            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate ,additionalPredicate])
+//
+//        } else {
+//
+//            request.predicate = categoryPredicate
+//        }
+//
+//        // retrive data request
+//        do {
+//            itemArray = try context.fetch(request)
+//        } catch { print(error.localizedDescription) }
+//
+//        // update UI
+//        tableView.reloadData()
+//
+//        // hide keyboard
+//        tableView.endEditing(true)
+//
+//    }
+//
 }
 
 // MARK: - UISearchBarDelegate protocol
 
-extension ToDoTableViewController: UISearchBarDelegate {
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
-        // create request to retrieve data from a persistent store
-        let request: NSFetchRequest <ToDoModel> = ToDoModel.fetchRequest()
-        
-        // unwrap text from search bar that was typed by user
-        guard let text = searchBar.text else { return }
-
-        //compare text from search bar with "title" Core Data
-        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", text)
-        
-        // create property to arrange "title" by ascending
-        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        
-        // retrieve data by request
-        loadData(with: request, predicate: predicate)
-        
-        // reload UI
-        tableView.reloadData()
-   
-    }
-    // It happens when text is cleared from the search text field
-    func searchBar(_ searchBar: UISearchBar, textDidChange: String) {
-        
-        // it triggered when search bar is clear after typing
-        if searchBar.text?.count == 0 {
-            
-            loadData()
+//extension ToDoTableViewController: UISearchBarDelegate {
+//
+//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+//
+//        // create request to retrieve data from a persistent store
+//        let request: NSFetchRequest <ToDoModel> = ToDoModel.fetchRequest()
+//
+//        // unwrap text from search bar that was typed by user
+//        guard let text = searchBar.text else { return }
+//
+//        //compare text from search bar with "title" Core Data
+//        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", text)
+//
+//        // create property to arrange "title" by ascending
+//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+//
+//        // retrieve data by request
+//        loadData(with: request, predicate: predicate)
+//
+//        // reload UI
+//        tableView.reloadData()
+//
+//    }
+//    // It happens when text is cleared from the search text field
+//    func searchBar(_ searchBar: UISearchBar, textDidChange: String) {
+//
+//        // it triggered when search bar is clear after typing
+//        if searchBar.text?.count == 0 {
+//
+//            loadData()
 
             //
 //            DispatchQueue.main.async {
@@ -243,13 +243,13 @@ extension ToDoTableViewController: UISearchBarDelegate {
 //                searchBar.resignFirstResponder()
 //            }
             
-        }
-        
-    }
-    
-    
-    
-}
+//        }
+//
+//    }
+//
+//
+//
+//}
 
 
 

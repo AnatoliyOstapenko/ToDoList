@@ -6,18 +6,28 @@
 //
 
 import UIKit
-
-// add CoreData framework
 import CoreData
 import RealmSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        if let i = Realm.Configuration.defaultConfiguration.fileURL {
+            print(i)
+        } else {
+            print("error with configuration")
+        }
+        
+        
+        // initialize framework Realm by do-catch statement
+        do {
+            let realm = try Realm()
+        } catch {
+            print(error.localizedDescription)
+        }
+
         return true
     }
 

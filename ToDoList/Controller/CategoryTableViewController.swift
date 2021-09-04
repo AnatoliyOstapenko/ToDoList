@@ -6,23 +6,21 @@
 //
 
 import UIKit
-import CoreData
 import RealmSwift
 
 class CategoryTableViewController: UITableViewController {
     
-    // create array to initialize Core Data
-    var array = [Category]()
-
+    // initialize Realm
+    let realm = try! Realm()
     
-    // initialize context Core Data from AppDelegate to interact with View Controller
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    // create array to assign Results type
+    var array: Results <Category>?
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // load last saved data from Core Data
+        // load last saved data
         loadData()
         
         // switch to Light Mode screen (avoid dark background table view)
@@ -32,17 +30,19 @@ class CategoryTableViewController: UITableViewController {
     //MARK: - UITableViewDataSource
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return array.count
+        
+        // array is optional so it has to be unwrap by coalascing method
+        return array?.count ?? 1
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
 
         //create item to dispatch array[indexPath.row]
-        let item = array[indexPath.row]
+        let item = array?[indexPath.row]
         
         // dispatch to default text label list of text from array
-        cell.textLabel?.text = item.name
+        cell.textLabel?.text = item?.name ?? "array is nil"
 
         return cell
     }
@@ -60,10 +60,8 @@ class CategoryTableViewController: UITableViewController {
         // create animated effect of deselecting row
         tableView.deselectRow(at: indexPath, animated: true)
         
-        // save data in Core Data
-        saveData()
         
-  // MARK: - UIStoryboardSegue prepare
+    // MARK: - UIStoryboardSegue prepare
    
     }
     // prepare before switch on the next UI screen (to transfer data from current VC to the next VC)
@@ -76,7 +74,7 @@ class CategoryTableViewController: UITableViewController {
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         
         //
-        destinationVC.selectedCategory = array[indexPath.row]
+        destinationVC.selectedCategory = array?[indexPath.row]
         
        
     }
@@ -91,27 +89,26 @@ class CategoryTableViewController: UITableViewController {
         // create pop up alert message
         let alert = UIAlertController(title: "Add new category", message: "", preferredStyle: .alert)
         
-        // add mandatory next step. create action for alert message
-        let action = UIAlertAction(title: "append", style: .default) { (action) in
+        // create UIAlertAction Button for alert message
+        let addButon = UIAlertAction(title: "Add", style: .default) { (action) in
             
             // All this happens when user click on UIAlertAction button:
             
-            //set a new item to initialize public class from CoreData and transfer context
-            let item = Category(context: self.context)
+            //set a new item to initialize class
+            let item = Category()
             
             // unwrap optional text from TextField
             guard let text = textField.text else { return }
             
             //assign "name" getting from text field that user printed
             item.name = text
-            
-            // add new printed text further that user type to array
-            self.array.append(item)
 
             // save data
-            self.saveData()
+            self.saveData(category: item)
 
         }
+        // create action UIAlertAction button for alert message
+        let cancelButton = UIAlertAction(title: "Cancel", style: .default, handler: nil)
         
         // It should happen when user click on addButtonPressed
         // create TextField in alert message to make user prints
@@ -125,41 +122,39 @@ class CategoryTableViewController: UITableViewController {
             
         }
         
-        // attaches an action object to the alert or action sheet.
-        alert.addAction(action)
-        
-        //activation alert and action
+        // attaches all of UIAlertAction objects to the alert
+        alert.addAction(addButon)
+        alert.addAction(cancelButton)
+
+        //activation alert
         present(alert, animated: true, completion: nil)
         
     }
     
-    // MARK: - Core Data
+    // MARK: - Realm Data
     
     // function to save data locally
-    func saveData() {
+    func saveData(category: Category) {
 
         do {
-            try context.save()
+            try realm.write {
+                realm.add(category)
+            }
         } catch { print(error.localizedDescription) }
         
+        // reload UI on screen
         tableView.reloadData()
         
     }
     
-    // function to load data from Core Data
-    func loadData(with request: NSFetchRequest <Category> = Category.fetchRequest()) {
+    // function to load data
+    func loadData() {
         
-        // retrive data request
-        do {
-            array = try context.fetch(request)
-        } catch { print(error.localizedDescription) }
+        // Returns all objects of the given type stored in the Realm
+        array = realm.objects(Category.self)
         
-        // update UI
+        // reload UI on screen
         tableView.reloadData()
-        
-        // hide keyboard
-        tableView.endEditing(true)
-
     }
     
 

@@ -6,8 +6,6 @@
 //
 
 import UIKit
-
-// add CoreData framework
 import CoreData
 import RealmSwift
 
@@ -16,7 +14,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        
+        if let i = Realm.Configuration.defaultConfiguration.fileURL {
+            print(i)
+        } else {
+            print("error with configuration")
+        }
         
         
         // initialize framework Realm by do-catch statement

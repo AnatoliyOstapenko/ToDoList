@@ -10,9 +10,10 @@ import RealmSwift
 
 // create superclass RealmSwiftObject
 class Category: Object {
+    
     @objc dynamic var name: String = ""
     
-    // define to-many relationships (one and more relationships)
+    // define to-many relationships with ToDoModel class
     let itemToDoModel = List <ToDoModel>()
 
     

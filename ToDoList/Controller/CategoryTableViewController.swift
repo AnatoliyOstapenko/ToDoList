@@ -14,7 +14,7 @@ class CategoryTableViewController: UITableViewController {
     let realm = try! Realm()
     
     // create array to assign Results type
-    var array: Results <Category>!
+    var array: Results <Category>?
     
 
     override func viewDidLoad() {
@@ -30,17 +30,19 @@ class CategoryTableViewController: UITableViewController {
     //MARK: - UITableViewDataSource
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return array.count
+        
+        // array is optional so it has to be unwrap by coalascing method
+        return array?.count ?? 1
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
 
         //create item to dispatch array[indexPath.row]
-        let item = array[indexPath.row]
+        let item = array?[indexPath.row]
         
         // dispatch to default text label list of text from array
-        cell.textLabel?.text = item.name
+        cell.textLabel?.text = item?.name ?? "array is nil"
 
         return cell
     }
@@ -72,7 +74,7 @@ class CategoryTableViewController: UITableViewController {
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         
         //
-        destinationVC.selectedCategory = array[indexPath.row]
+        destinationVC.selectedCategory = array?[indexPath.row]
         
        
     }

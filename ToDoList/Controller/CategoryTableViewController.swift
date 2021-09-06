@@ -13,7 +13,8 @@ class CategoryTableViewController: UITableViewController {
     // initialize Realm
     let realm = try! Realm()
     
-    // create array to assign Results type
+    
+    // create array to initialize Result collection of Category struct
     var array: Results <Category>?
     
 
@@ -39,10 +40,11 @@ class CategoryTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
 
         //create item to dispatch array[indexPath.row]
-        let item = array?[indexPath.row]
-        
-        // dispatch to default text label list of text from array
-        cell.textLabel?.text = item?.name ?? "array is nil"
+        if let item = array?[indexPath.row] {
+            
+            // dispatch to default text label list of text from array
+            cell.textLabel?.text = item.name
+        } else { print("error with cell") }
 
         return cell
     }
@@ -73,7 +75,7 @@ class CategoryTableViewController: UITableViewController {
         //unwrap index path for selected row
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         
-        //
+        // dispatch data to selectedCategory in ToDoTableVC
         destinationVC.selectedCategory = array?[indexPath.row]
         
        
@@ -90,7 +92,7 @@ class CategoryTableViewController: UITableViewController {
         let alert = UIAlertController(title: "Add new category", message: "", preferredStyle: .alert)
         
         // create UIAlertAction Button for alert message
-        let addButon = UIAlertAction(title: "Add", style: .default) { (action) in
+        let addButton = UIAlertAction(title: "Add", style: .default) { (action) in
             
             // All this happens when user click on UIAlertAction button:
             
@@ -123,7 +125,7 @@ class CategoryTableViewController: UITableViewController {
         }
         
         // attaches all of UIAlertAction objects to the alert
-        alert.addAction(addButon)
+        alert.addAction(addButton)
         alert.addAction(cancelButton)
 
         //activation alert
@@ -135,12 +137,11 @@ class CategoryTableViewController: UITableViewController {
     
     // function to save data locally
     func saveData(category: Category) {
-
-        do {
-            try realm.write {
-                realm.add(category)
-            }
-        } catch { print(error.localizedDescription) }
+        
+        // add data
+        try! realm.write {
+            realm.add(category)
+        }
         
         // reload UI on screen
         tableView.reloadData()

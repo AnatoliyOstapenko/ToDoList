@@ -184,7 +184,7 @@ class ToDoTableViewController: UITableViewController {
     func loadData() {
 
         // Returns a Results containing the objects in the list, but sorted.
-        array = selectedCategory?.itemToDoModel.sorted(byKeyPath: "title", ascending: true)
+        array = selectedCategory?.itemToDoModel.sorted(byKeyPath: "date", ascending: true)
 
         // update UI
         tableView.reloadData()
@@ -208,26 +208,8 @@ extension ToDoTableViewController: UISearchBarDelegate {
         // Returns matching object with text user printed from array. sorted by ascending
         array = array?.filter("title CONTAINS[cd] %@", text).sorted(byKeyPath: "date", ascending: true)
         
-        
+        // update UI
         tableView.reloadData()
-        
-
-
-//        // create request to retrieve data from a persistent store
-//        let request: NSFetchRequest <ToDoModel> = ToDoModel.fetchRequest()
-//
-//        // unwrap text from search bar that was typed by user
-//        guard let text = searchBar.text else { return }
-//
-//        //compare text from search bar with "title" Core Data
-//        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", text)
-//
-//        // create property to arrange "title" by ascending
-//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//
-//        // retrieve data by request
-//        loadData(with: request, predicate: predicate)
-//
 
 
     }

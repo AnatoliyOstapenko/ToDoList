@@ -28,6 +28,9 @@ class CategoryTableViewController: UITableViewController {
         
         // switch to Light Mode screen (avoid dark background table view)
         overrideUserInterfaceStyle = .light
+        
+        // change height of row to 80
+        tableView.rowHeight = 80
     }
 
     //MARK: - UITableViewDataSource
@@ -36,14 +39,8 @@ class CategoryTableViewController: UITableViewController {
         
         // array is optional so it has to be unwrap by coalascing method
         return array?.count ?? 1
+        
     }
-    
-//    // create cell from SwipeTableVC
-//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell") as! SwipeTableViewCell
-//        cell.delegate = self
-//        return cell
-//    }
     
     // update cell as SwipeTableVC
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -125,7 +122,7 @@ class CategoryTableViewController: UITableViewController {
 
         }
         // create action UIAlertAction button for alert message
-        let cancelButton = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        let cancelButton = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
         
         // It should happen when user click on addButtonPressed
         // create TextField in alert message to make user prints
@@ -180,9 +177,39 @@ class CategoryTableViewController: UITableViewController {
 
 extension CategoryTableViewController: SwipeTableViewCellDelegate {
     
-    
+    // grab it from https://github.com/SwipeCellKit/SwipeCellKit
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-        <#code#>
+        
+        guard orientation == .right else { return nil }
+
+            let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+              
+                //create and unwrap data in row: array[indexPath.row]
+                guard let item = self.array?[indexPath.row] else { return }
+                
+                // delete row from Realm and from screen
+                try! self.realm.write {
+                    self.realm.delete(item)
+                }
+                
+                // update UI is mandatory (otherwise app crashes)
+//                tableView.reloadData() - don't use if change behavior below 
+            }
+
+            // customize the action appearance
+            deleteAction.image = UIImage(named: "delete")
+
+            return [deleteAction]
+    }
+    // to customize the behavior of the swipe actions:
+    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        var options = SwipeOptions()
+        options.expansionStyle = .destructive
+        options.transitionStyle = .border
+        
+        return options
+        
+        
     }
     
     

@@ -7,13 +7,16 @@
 
 import UIKit
 import RealmSwift
+import SwipeCellKit
 
 class CategoryTableViewController: UITableViewController {
+
     
     // initialize Realm
     let realm = try! Realm()
     
-    // create array to assign Results type
+    
+    // create array to initialize Result collection of Category struct
     var array: Results <Category>?
     
 
@@ -25,6 +28,9 @@ class CategoryTableViewController: UITableViewController {
         
         // switch to Light Mode screen (avoid dark background table view)
         overrideUserInterfaceStyle = .light
+        
+        // change height of row to 80
+        tableView.rowHeight = 80
     }
 
     //MARK: - UITableViewDataSource
@@ -33,16 +39,22 @@ class CategoryTableViewController: UITableViewController {
         
         // array is optional so it has to be unwrap by coalascing method
         return array?.count ?? 1
-    }
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+    }
+    
+    // update cell as SwipeTableVC
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
 
         //create item to dispatch array[indexPath.row]
-        let item = array?[indexPath.row]
+        if let item = array?[indexPath.row] {
+
+            // dispatch to default text label list of text from array
+            cell.textLabel?.text = item.name
+        } else { print("error with cell") }
         
-        // dispatch to default text label list of text from array
-        cell.textLabel?.text = item?.name ?? "array is nil"
+        cell.delegate = self
 
         return cell
     }
@@ -59,11 +71,13 @@ class CategoryTableViewController: UITableViewController {
         
         // create animated effect of deselecting row
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        
-    // MARK: - UIStoryboardSegue prepare
    
     }
+    
+    
+    
+    // MARK: - UIStoryboardSegue prepare
+    
     // prepare before switch on the next UI screen (to transfer data from current VC to the next VC)
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -73,7 +87,7 @@ class CategoryTableViewController: UITableViewController {
         //unwrap index path for selected row
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         
-        //
+        // dispatch data to selectedCategory in ToDoTableVC
         destinationVC.selectedCategory = array?[indexPath.row]
         
        
@@ -90,7 +104,7 @@ class CategoryTableViewController: UITableViewController {
         let alert = UIAlertController(title: "Add new category", message: "", preferredStyle: .alert)
         
         // create UIAlertAction Button for alert message
-        let addButon = UIAlertAction(title: "Add", style: .default) { (action) in
+        let addButton = UIAlertAction(title: "Add", style: .default) { (action) in
             
             // All this happens when user click on UIAlertAction button:
             
@@ -108,7 +122,7 @@ class CategoryTableViewController: UITableViewController {
 
         }
         // create action UIAlertAction button for alert message
-        let cancelButton = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        let cancelButton = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
         
         // It should happen when user click on addButtonPressed
         // create TextField in alert message to make user prints
@@ -123,7 +137,7 @@ class CategoryTableViewController: UITableViewController {
         }
         
         // attaches all of UIAlertAction objects to the alert
-        alert.addAction(addButon)
+        alert.addAction(addButton)
         alert.addAction(cancelButton)
 
         //activation alert
@@ -135,12 +149,11 @@ class CategoryTableViewController: UITableViewController {
     
     // function to save data locally
     func saveData(category: Category) {
-
-        do {
-            try realm.write {
-                realm.add(category)
-            }
-        } catch { print(error.localizedDescription) }
+        
+        // add data
+        try! realm.write {
+            realm.add(category)
+        }
         
         // reload UI on screen
         tableView.reloadData()
@@ -160,6 +173,46 @@ class CategoryTableViewController: UITableViewController {
 
 }
             
+  //MARK:- SwipeTableViewCellDelegate protocol
+
+extension CategoryTableViewController: SwipeTableViewCellDelegate {
+    
+    // grab it from https://github.com/SwipeCellKit/SwipeCellKit
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
         
+        guard orientation == .right else { return nil }
+
+            let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+              
+                //create and unwrap data in row: array[indexPath.row]
+                guard let item = self.array?[indexPath.row] else { return }
+                
+                // delete row from Realm and from screen
+                try! self.realm.write {
+                    self.realm.delete(item)
+                }
+                
+                // update UI is mandatory (otherwise app crashes)
+//                tableView.reloadData() - don't use if change behavior below 
+            }
+
+            // customize the action appearance
+            deleteAction.image = UIImage(named: "delete")
+
+            return [deleteAction]
+    }
+    // to customize the behavior of the swipe actions:
+    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        var options = SwipeOptions()
+        options.expansionStyle = .destructive
+        options.transitionStyle = .border
+        
+        return options
+        
+        
+    }
+    
+    
+}
     
 

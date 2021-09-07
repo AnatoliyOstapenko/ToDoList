@@ -6,44 +6,37 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 
 
 // change UIViewController to UITableViewController (UITableViewDataSource and UITableViewDelegate included)
 class ToDoTableViewController: UITableViewController {
     
+    // initialize Realm
+    let realm = try! Realm()
     
-    @IBOutlet weak var todoSearchBar: UISearchBar!
-    
-    
-    // create array to initialize for using in table view
-    var itemArray = [ToDoModel]()
+    // create array to initialize Result collection of ToDoModel struct
+    var array: Results <ToDoModel>?
     
     //create Computed property to fetch information from CategoryVC
     var selectedCategory: Category? {
         didSet {
-            
-            // load last saved data from Core Data
-//            loadData()
+            // load last saved data
+            loadData()
         }
     }
-
     
-    // initialize context CoreData from AppDelegate to interact with View Controller
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-
-    
+    @IBOutlet weak var todoSearchBar: UISearchBar!
+      
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
-        
         // switch to Light Mode screen (avoid dark background table view)
         overrideUserInterfaceStyle = .light
         
         // initialize UISearchBarDelegate
-//        todoSearchBar.delegate = self
+        todoSearchBar.delegate = self
 
     }
     
@@ -51,7 +44,7 @@ class ToDoTableViewController: UITableViewController {
     
         // set numbers of rows in TableView
         override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return itemArray.count
+            return array?.count ?? 1
             
         }
         
@@ -61,16 +54,21 @@ class ToDoTableViewController: UITableViewController {
             // Returns a reusable table-view cell object for the specified reuse identifier and adds it to the table.
             let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath)
             
-            //create item to dispatch itemArray[indexPath.row]
-            let item = itemArray[indexPath.row]
-            
-            // dispatch to default text label list of text from array
-            cell.textLabel?.text = item.title
-            
-            //Ternary operator ==> instead of if let statement
-            // value which has to be changed = condition ? if value true : else value false
-            cell.accessoryType = item.done ? .checkmark : .none
-            
+            //create and unwrap item to dispatch array[indexPath.row]
+            if let item = array?[indexPath.row] {
+                
+                // dispatch to default text label list of text from array
+                cell.textLabel?.text = item.title
+                
+                //Ternary operator ==> instead of if let statement
+                // value which has to be changed = condition ? if value true : else value false
+                cell.accessoryType = item.done ? .checkmark : .none
+                
+            } else {
+                // show error on the screen
+                cell.textLabel?.text = "array is nil"
+            }
+
             return cell
         }
    
@@ -81,25 +79,34 @@ class ToDoTableViewController: UITableViewController {
     // delegate to create an interaction UI with tableview, when user select row
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        //create item to dispatch itemArray[indexPath.row]
-        let item = itemArray[indexPath.row]
+        //create and unwrap data in row: array[indexPath.row]
+        guard let item = array?[indexPath.row] else { return }
+        
+        // persist "done" status
+        do {
+            try realm.write {
+                // set opposite equation instead of if else statement
+                // if "done" is true it is changed on false, and opposite
+                item.done = !item.done
+            }
+        } catch { print(error.localizedDescription) }
+        
+
 
 //        // remove row from Core Data
 //        context.delete(item)
 //
 //        // remove row from array
-//        itemArray.remove(at: indexPath.row)
-        
-        // set opposite equation instead of if else statement
-        // if "done" is true it is changed on false, and opposite
-        item.done = !item.done
-        
-        // save data in Core Data
-        saveData()
-        
+//        array.remove(at: indexPath.row)
+//
+//        // save data in Core Data
+//         saveData()
+
         // create animated effect of deselecting row
         tableView.deselectRow(at: indexPath, animated: true)
-   
+        //update UI
+        tableView.reloadData()
+
     }
     
     //MARK: - Add New Items
@@ -113,32 +120,41 @@ class ToDoTableViewController: UITableViewController {
         let alert = UIAlertController(title: "Add ToDo Item", message: "", preferredStyle: .alert)
         
         // add mandatory next step. create action for alert message
-        let action = UIAlertAction(title: "\u{2705}", style: .default) { (action) in
+        let addButton = UIAlertAction(title: "\u{2705}", style: .default) { (action) in
             
             //All this happens when user click on UIAlertAction button:
             
-//            //set a new item to initialize public class ToDoModel from CoreData and transfer context
-//            let item = ToDoModel(context: self.context)
-//
-//            // unwrap optional text from TextField
-//            guard let newItem = textField.text else { return }
-//
-//            //assign "title" get from text field by newItem what user printed
-//            item.title = newItem
-//
-//            //assign "done" false by default
-//            item.done = false
-//
-//            //assign relationships in Core Data
-//            item.parentCategory = self.selectedCategory
-//
-//            // add new printed text further that user type to array
-//            self.itemArray.append(item)
+            // add item to initialize class ToDoModel
+            let item = ToDoModel()
+            
+            // unwrap optional text from TextField
+            guard let text = textField.text else { return }
+            
+            // assign "title" get from text field by text that user printed
+            item.title = text
+            
+            // assign "date" get from current date
+            item.date = Date()
+            print(item.date ?? 0)
+            
+            // create and unwrap new item to get selected category
+            guard let newItem = self.selectedCategory else { return }
 
-            // save data
-            self.saveData()
-
+            // add new items to array (list)
+            do {
+                try self.realm.write {
+                    
+                    // append the given object to the end of the list
+                    newItem.itemToDoModel.append(item)
+                }
+            } catch { print(error.localizedDescription) }
+            
+            // update UI
+            self.tableView.reloadData()
         }
+        
+        // create action UIAlertAction button for alert message
+        let cancelButton = UIAlertAction(title: "\u{274C}", style: .default, handler: nil)
         
         // It should happen when user click on addBarButtonPressed:
         
@@ -153,103 +169,71 @@ class ToDoTableViewController: UITableViewController {
             
         }
         
-        // attaches an action object to the alert or action sheet.
-        alert.addAction(action)
+        // attaches actions object to the alert or action sheet.
+        alert.addAction(addButton)
+        alert.addAction(cancelButton)
         
         //activation alert and action
         present(alert, animated: true, completion: nil)
         
     }
     
-    // MARK: - Realm Data
+    // MARK: - Load Data
     
-    // function to save data locally
-    func saveData() {
+    // function to load data
+    func loadData() {
 
-        do {
-            try context.save()
-        } catch { print(error.localizedDescription) }
-        
+        // Returns a Results containing the objects in the list, but sorted.
+        array = selectedCategory?.itemToDoModel.sorted(byKeyPath: "date", ascending: true)
+
+        // update UI
         tableView.reloadData()
-        
+
+        // hide keyboard
+        tableView.endEditing(true)
     }
-    
-//    // function to load data
-//    func loadData(with request: NSFetchRequest <ToDoModel> = ToDoModel.fetchRequest(), predicate: NSPredicate? = nil) {
-//
-//        // compare text with "name" in Core Data
-//        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-//
-//        if let additionalPredicate = predicate {
-//
-//            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate ,additionalPredicate])
-//
-//        } else {
-//
-//            request.predicate = categoryPredicate
-//        }
-//
-//        // retrive data request
-//        do {
-//            itemArray = try context.fetch(request)
-//        } catch { print(error.localizedDescription) }
-//
-//        // update UI
-//        tableView.reloadData()
-//
-//        // hide keyboard
-//        tableView.endEditing(true)
-//
-//    }
-//
+
 }
 
 // MARK: - UISearchBarDelegate protocol
 
-//extension ToDoTableViewController: UISearchBarDelegate {
-//
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//
-//        // create request to retrieve data from a persistent store
-//        let request: NSFetchRequest <ToDoModel> = ToDoModel.fetchRequest()
-//
-//        // unwrap text from search bar that was typed by user
-//        guard let text = searchBar.text else { return }
-//
-//        //compare text from search bar with "title" Core Data
-//        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", text)
-//
-//        // create property to arrange "title" by ascending
-//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//
-//        // retrieve data by request
-//        loadData(with: request, predicate: predicate)
-//
-//        // reload UI
-//        tableView.reloadData()
-//
-//    }
-//    // It happens when text is cleared from the search text field
-//    func searchBar(_ searchBar: UISearchBar, textDidChange: String) {
-//
-//        // it triggered when search bar is clear after typing
-//        if searchBar.text?.count == 0 {
-//
-//            loadData()
+extension ToDoTableViewController: UISearchBarDelegate {
+    
+    // It happens when user clicked search button
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        // unwrap text from search bar
+        guard let text = searchBar.text else { return }
+        
+        // Returns matching object with text user printed from array. sorted by ascending
+        array = array?.filter("title CONTAINS[cd] %@", text).sorted(byKeyPath: "date", ascending: true)
+        
+        // update UI
+        tableView.reloadData()
 
-            //
-//            DispatchQueue.main.async {
-//                //
-//                searchBar.resignFirstResponder()
-//            }
+
+    }
+    // It happens when text is cleared from the search text field
+    func searchBar(_ searchBar: UISearchBar, textDidChange: String) {
+
+        // it triggered when search bar is clear after typing
+        if searchBar.text?.count == 0 {
+
+            loadData()
+
             
-//        }
-//
-//    }
-//
-//
-//
-//}
+            DispatchQueue.main.async {
+                //
+                searchBar.resignFirstResponder()
+            }
+            
+        }
+
+    }
+
+
+
+}
 
 
 

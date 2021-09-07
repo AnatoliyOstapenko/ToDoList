@@ -7,8 +7,10 @@
 
 import UIKit
 import RealmSwift
+import SwipeCellKit
 
 class CategoryTableViewController: UITableViewController {
+
     
     // initialize Realm
     let realm = try! Realm()
@@ -35,16 +37,27 @@ class CategoryTableViewController: UITableViewController {
         // array is optional so it has to be unwrap by coalascing method
         return array?.count ?? 1
     }
+    
+//    // create cell from SwipeTableVC
+//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell") as! SwipeTableViewCell
+//        cell.delegate = self
+//        return cell
+//    }
+    
+    // update cell as SwipeTableVC
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
 
         //create item to dispatch array[indexPath.row]
         if let item = array?[indexPath.row] {
-            
+
             // dispatch to default text label list of text from array
             cell.textLabel?.text = item.name
         } else { print("error with cell") }
+        
+        cell.delegate = self
 
         return cell
     }
@@ -61,11 +74,13 @@ class CategoryTableViewController: UITableViewController {
         
         // create animated effect of deselecting row
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        
-    // MARK: - UIStoryboardSegue prepare
    
     }
+    
+    
+    
+    // MARK: - UIStoryboardSegue prepare
+    
     // prepare before switch on the next UI screen (to transfer data from current VC to the next VC)
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -161,6 +176,16 @@ class CategoryTableViewController: UITableViewController {
 
 }
             
-        
+  //MARK:- SwipeTableViewCellDelegate protocol
+
+extension CategoryTableViewController: SwipeTableViewCellDelegate {
+    
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        <#code#>
+    }
+    
+    
+}
     
 

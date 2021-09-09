@@ -16,6 +16,7 @@
 		FA05165E26D045FD00D8666B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA05165C26D045FD00D8666B /* LaunchScreen.storyboard */; };
 		FAA341FE26E16DF100E2B3F6 /* ToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA341FD26E16DF100E2B3F6 /* ToDoModel.swift */; };
 		FAA3420126E16E0800E2B3F6 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAA3420026E16E0800E2B3F6 /* Category.swift */; };
+		FAD1C05F26EA308700D989AE /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD1C05E26EA308700D989AE /* SwipeTableViewController.swift */; };
 		FAF067D226DD5841000A3357 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF067D126DD5841000A3357 /* CategoryTableViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,7 @@
 		FA05165F26D045FD00D8666B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FAA341FD26E16DF100E2B3F6 /* ToDoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoModel.swift; sourceTree = "<group>"; };
 		FAA3420026E16E0800E2B3F6 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		FAD1C05E26EA308700D989AE /* SwipeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeTableViewController.swift; sourceTree = "<group>"; };
 		FAF067D126DD5841000A3357 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -111,6 +113,7 @@
 			children = (
 				FAF067D126DD5841000A3357 /* CategoryTableViewController.swift */,
 				FA05165526D045FA00D8666B /* ToDoTableViewController.swift */,
+				FAD1C05E26EA308700D989AE /* SwipeTableViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -241,6 +244,7 @@
 				FA05165626D045FA00D8666B /* ToDoTableViewController.swift in Sources */,
 				FA05165226D045FA00D8666B /* AppDelegate.swift in Sources */,
 				FAF067D226DD5841000A3357 /* CategoryTableViewController.swift in Sources */,
+				FAD1C05F26EA308700D989AE /* SwipeTableViewController.swift in Sources */,
 				FA05165426D045FA00D8666B /* SceneDelegate.swift in Sources */,
 				FAA341FE26E16DF100E2B3F6 /* ToDoModel.swift in Sources */,
 				FAA3420126E16E0800E2B3F6 /* Category.swift in Sources */,

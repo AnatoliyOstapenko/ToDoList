@@ -9,9 +9,8 @@ import UIKit
 import RealmSwift
 
 
-
-// change UIViewController to UITableViewController (UITableViewDataSource and UITableViewDelegate included)
-class ToDoTableViewController: UITableViewController {
+// change UITableViewController to SwipeTableViewController
+class ToDoTableViewController: SwipeTableViewController {
     
     // initialize Realm
     let realm = try! Realm()
@@ -31,6 +30,9 @@ class ToDoTableViewController: UITableViewController {
       
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // change height of row to 80
+        tableView.rowHeight = 80
 
         // switch to Light Mode screen (avoid dark background table view)
         overrideUserInterfaceStyle = .light
@@ -48,12 +50,12 @@ class ToDoTableViewController: UITableViewController {
             
         }
         
-        // ask for the data source for a cell to insert in a particular location of the table view
+        // update cell as SwipeTableViewController
         override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-            // Returns a reusable table-view cell object for the specified reuse identifier and adds it to the table.
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoCell", for: indexPath)
             
+            // create cell as a super table view from SwipeTableViewController
+            let cell = super.tableView(tableView, cellForRowAt: indexPath)
+
             //create and unwrap item to dispatch array[indexPath.row]
             if let item = array?[indexPath.row] {
                 
@@ -90,17 +92,6 @@ class ToDoTableViewController: UITableViewController {
                 item.done = !item.done
             }
         } catch { print(error.localizedDescription) }
-        
-
-
-//        // remove row from Core Data
-//        context.delete(item)
-//
-//        // remove row from array
-//        array.remove(at: indexPath.row)
-//
-//        // save data in Core Data
-//         saveData()
 
         // create animated effect of deselecting row
         tableView.deselectRow(at: indexPath, animated: true)
@@ -120,7 +111,7 @@ class ToDoTableViewController: UITableViewController {
         let alert = UIAlertController(title: "Add ToDo Item", message: "", preferredStyle: .alert)
         
         // add mandatory next step. create action for alert message
-        let addButton = UIAlertAction(title: "\u{2705}", style: .default) { (action) in
+        let addButton = UIAlertAction(title: "Add", style: .default) { (action) in
             
             //All this happens when user click on UIAlertAction button:
             
@@ -135,26 +126,22 @@ class ToDoTableViewController: UITableViewController {
             
             // assign "date" get from current date
             item.date = Date()
-            print(item.date ?? 0)
             
             // create and unwrap new item to get selected category
             guard let newItem = self.selectedCategory else { return }
 
             // add new items to array (list)
-            do {
-                try self.realm.write {
-                    
+            try! self.realm.write {
                     // append the given object to the end of the list
                     newItem.itemToDoModel.append(item)
                 }
-            } catch { print(error.localizedDescription) }
             
             // update UI
             self.tableView.reloadData()
         }
         
         // create action UIAlertAction button for alert message
-        let cancelButton = UIAlertAction(title: "\u{274C}", style: .default, handler: nil)
+        let cancelButton = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
         
         // It should happen when user click on addBarButtonPressed:
         
@@ -191,6 +178,20 @@ class ToDoTableViewController: UITableViewController {
 
         // hide keyboard
         tableView.endEditing(true)
+    }
+    
+    // MARK: - Delete Data From Swipe
+    
+    // use function from SwipeTableViewController
+    override func deleteBySwiping(at indexPath: IndexPath) {
+        
+        //create and unwrap data in row: array[indexPath.row]
+        guard let item = self.array?[indexPath.row] else { return }
+        
+        // delete row from Realm and from screen
+        try! self.realm.write {
+            self.realm.delete(item)
+        }
     }
 
 }

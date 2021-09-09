@@ -8,6 +8,8 @@
 import UIKit
 import SwipeCellKit
 
+
+
 class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegate {
 
     override func viewDidLoad() {
@@ -15,6 +17,19 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
 
         
     }
+    //MARK: - UITableViewDataSource
+    
+    // create cell as SwipeTableViewController
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! SwipeTableViewCell
+        
+        cell.delegate = self
+
+        return cell
+    }
+    
+    //MARK: - UITableViewDelegate
     
     // grab it from https://github.com/SwipeCellKit/SwipeCellKit
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
@@ -22,19 +37,10 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         guard orientation == .right else { return nil }
 
             let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
-                
-                print("delete cell")
-              
-//                //create and unwrap data in row: array[indexPath.row]
-//                guard let item = self.array?[indexPath.row] else { return }
-//
-//                // delete row from Realm and from screen
-//                try! self.realm.write {
-//                    self.realm.delete(item)
-//                }
-                
-                // update UI is mandatory (otherwise app crashes)
-//                tableView.reloadData() - don't use if change behavior below
+               
+                // delete action happens here
+                self.deleteBySwiping(at: indexPath)
+
             }
 
             // customize the action appearance
@@ -52,6 +58,11 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         return options
         
         
+    }
+    
+    // create function to use in CategoryTableViewController
+    func deleteBySwiping (at indexPath: IndexPath) {
+
     }
 
     

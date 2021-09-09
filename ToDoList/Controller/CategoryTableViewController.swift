@@ -7,7 +7,7 @@
 
 import UIKit
 import RealmSwift
-import SwipeCellKit
+
 
 // change UITableViewController to SwipeTableViewController
 class CategoryTableViewController: SwipeTableViewController {
@@ -46,7 +46,8 @@ class CategoryTableViewController: SwipeTableViewController {
     // update cell as SwipeTableViewController
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
+        // create cell as a super table view from SwipeTableViewController
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
 
         //create item to dispatch array[indexPath.row]
         if let item = array?[indexPath.row] {
@@ -54,8 +55,6 @@ class CategoryTableViewController: SwipeTableViewController {
             // dispatch to default text label list of text from array
             cell.textLabel?.text = item.name
         } else { print("error with cell") }
-        
-        cell.delegate = self
 
         return cell
     }
@@ -170,6 +169,21 @@ class CategoryTableViewController: SwipeTableViewController {
         // reload UI on screen
         tableView.reloadData()
     }
+    
+    // MARK: - Delete Data From Swipe
+    
+    // use function from SwipeTableViewController
+    override func deleteBySwiping(at indexPath: IndexPath) {
+        
+        //create and unwrap data in row: array[indexPath.row]
+        guard let item = self.array?[indexPath.row] else { return }
+        
+        // delete row from Realm and from screen
+        try! self.realm.write {
+            self.realm.delete(item)
+        }
+    }
+    
     
 
 }

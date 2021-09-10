@@ -27,11 +27,7 @@ class CategoryTableViewController: SwipeTableViewController {
         // load last saved data
         loadData()
         
-        // switch to Light Mode screen (avoid dark background table view)
-        overrideUserInterfaceStyle = .light
         
-        // change height of row to 80
-        tableView.rowHeight = 80
     }
 
     //MARK: - UITableViewDataSource

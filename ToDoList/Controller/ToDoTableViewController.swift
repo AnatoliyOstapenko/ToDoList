@@ -31,12 +31,6 @@ class ToDoTableViewController: SwipeTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // change height of row to 80
-        tableView.rowHeight = 80
-
-        // switch to Light Mode screen (avoid dark background table view)
-        overrideUserInterfaceStyle = .light
-        
         // initialize UISearchBarDelegate
         todoSearchBar.delegate = self
 
@@ -85,19 +79,17 @@ class ToDoTableViewController: SwipeTableViewController {
         guard let item = array?[indexPath.row] else { return }
         
         // persist "done" status
-        do {
-            try realm.write {
-                // set opposite equation instead of if else statement
-                // if "done" is true it is changed on false, and opposite
-                item.done = !item.done
-            }
-        } catch { print(error.localizedDescription) }
-
+        try! realm.write {
+            // set opposite equation instead of if else statement
+            // if "done" is true it is changed on false, and opposite
+            item.done = !item.done
+        }
+        
         // create animated effect of deselecting row
         tableView.deselectRow(at: indexPath, animated: true)
         //update UI
         tableView.reloadData()
-
+        
     }
     
     //MARK: - Add New Items

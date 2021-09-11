@@ -7,6 +7,7 @@
 
 import UIKit
 import SwipeCellKit
+import ChameleonFramework
 
 
 
@@ -14,7 +15,18 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        // switch to Light Mode screen (avoid dark background table view)
+        overrideUserInterfaceStyle = .light
+        
+        // change height of row to 80
+        tableView.rowHeight = 80
+        
+        // delete separator line between cells
+        tableView.separatorStyle = .none
+        
+        
+            
         
     }
     //MARK: - UITableViewDataSource

@@ -45,8 +45,6 @@ class CategoryTableViewController: SwipeTableViewController {
 
         // create cell as a super table view from SwipeTableViewController
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        
-        
 
         //create item to dispatch array[indexPath.row]
         if let item = array?[indexPath.row] {

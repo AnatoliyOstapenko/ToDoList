@@ -25,9 +25,8 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         // delete separator line between cells
         tableView.separatorStyle = .none
         
-        
-            
-        
+        // change bar tint of navigation bar
+        navigationController?.navigationBar.barTintColor = FlatNavyBlue()
     }
     //MARK: - UITableViewDataSource
     

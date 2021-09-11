@@ -34,6 +34,7 @@ class ToDoTableViewController: SwipeTableViewController {
         // initialize UISearchBarDelegate
         todoSearchBar.delegate = self
 
+
     }
     
     //MARK: - UITableViewDataSource
@@ -57,8 +58,17 @@ class ToDoTableViewController: SwipeTableViewController {
                 cell.textLabel?.text = item.title
                 
                 //Ternary operator ==> instead of if let statement
-                // value which has to be changed = condition ? if value true : else value false
+                // value which has to be changed = boolean condition ? if value true : else value false
                 cell.accessoryType = item.done ? .checkmark : .none
+                
+                // set gradient colors to cells from Chameleon Framework
+                if let color = UIColor.flatNavyBlue().lighten(byPercentage: CGFloat(indexPath.row) / CGFloat(array!.count)) {
+                    cell.backgroundColor = color
+                    
+                }
+
+         
+                
                 
             } else {
                 // show error on the screen

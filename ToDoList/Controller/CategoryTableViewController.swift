@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 
 // change UITableViewController to SwipeTableViewController
@@ -44,13 +45,21 @@ class CategoryTableViewController: SwipeTableViewController {
 
         // create cell as a super table view from SwipeTableViewController
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        
+        
 
         //create item to dispatch array[indexPath.row]
         if let item = array?[indexPath.row] {
-
-            // dispatch to default text label list of text from array
+            
+            // get default color from array (it was saved in add method)
+            cell.backgroundColor = UIColor(hexString: item.color)
+            
+            // get default text from array (it was saved in add method)
             cell.textLabel?.text = item.name
+            
         } else { print("error with cell") }
+        
+        
 
         return cell
     }
@@ -112,9 +121,9 @@ class CategoryTableViewController: SwipeTableViewController {
             
             //assign "name" getting from text field that user printed
             item.name = text
-
+            item.color = UIColor.randomFlat().hexValue()
             // save data
-            self.saveData(category: item)
+            self.saveData(item: item)
 
         }
         // create action UIAlertAction button for alert message
@@ -144,11 +153,11 @@ class CategoryTableViewController: SwipeTableViewController {
     // MARK: - Realm Data
     
     // function to save data locally
-    func saveData(category: Category) {
+    func saveData(item: Category) {
         
         // add data
         try! realm.write {
-            realm.add(category)
+            realm.add(item)
         }
         
         // reload UI on screen

@@ -61,8 +61,8 @@ class ToDoTableViewController: SwipeTableViewController {
                 // value which has to be changed = boolean condition ? if value true : else value false
                 cell.accessoryType = item.done ? .checkmark : .none
 
-                // creat newColor to return color from Category class in Realm
-                if let newColor = selectedCategory?.color {
+                // create newColor to return color from Category class in Realm
+                if let newColor = selectedCategory?.color, let newName = selectedCategory?.name {
                     // change String to UIColor type
                     let categoryColor = UIColor(hexString: newColor)
                     
@@ -77,6 +77,11 @@ class ToDoTableViewController: SwipeTableViewController {
                         // change checkmark color to contrast depending on background cell color (framework)
                         cell.tintColor = UIColor(contrastingBlackOrWhiteColorOn: color, isFlat: true)
                         
+                        // change bar tint of navigation bar
+                        navigationController?.navigationBar.barTintColor = color
+                        
+                        // change bar title of navigation bar
+                        navigationController?.navigationBar.topItem?.title = newName
                     }
   
                 }

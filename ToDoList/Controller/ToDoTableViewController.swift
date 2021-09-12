@@ -46,55 +46,50 @@ class ToDoTableViewController: SwipeTableViewController {
         }
         
         // update cell as SwipeTableViewController
-        override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        // create cell as a super table view from SwipeTableViewController
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        
+        // create and unwrap item to get array[indexPath.row]
+        guard let item = array?[indexPath.row] else {fatalError(description)}
+        
+        // dispatch to default text label list of text from array
+        cell.textLabel?.text = item.title
+        
+        //Ternary operator ==> instead of if let statement
+        // value which has to be changed = boolean condition ? if value true : else value false
+        cell.accessoryType = item.done ? .checkmark : .none
+        
+        // create newColor to return color from Category class in Realm
+        guard let newColor = selectedCategory?.color, let newName = selectedCategory?.name else {fatalError(description)}
+        
+        // change String to UIColor type
+        let categoryColor = UIColor(hexString: newColor)
+        
+        // set gradient colors to cells from Chameleon Framework
+        if let color = categoryColor!.lighten(byPercentage: CGFloat(indexPath.row) / CGFloat(array!.count)) {
+            // set cell color
+            cell.backgroundColor = color
             
-            // create cell as a super table view from SwipeTableViewController
-            let cell = super.tableView(tableView, cellForRowAt: indexPath)
-
-            //create and unwrap item to get array[indexPath.row]
-            if let item = array?[indexPath.row] {
-                
-                // dispatch to default text label list of text from array
-                cell.textLabel?.text = item.title
-                
-                //Ternary operator ==> instead of if let statement
-                // value which has to be changed = boolean condition ? if value true : else value false
-                cell.accessoryType = item.done ? .checkmark : .none
-
-                // create newColor to return color from Category class in Realm
-                if let newColor = selectedCategory?.color, let newName = selectedCategory?.name {
-                    // change String to UIColor type
-                    let categoryColor = UIColor(hexString: newColor)
-                    
-                    // set gradient colors to cells from Chameleon Framework
-                    if let color = categoryColor!.lighten(byPercentage: CGFloat(indexPath.row) / CGFloat(array!.count)) {
-                        // set cell color
-                        cell.backgroundColor = color
-                        
-                        // change default text color to contrast depending on background cell color (framework)
-                        cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: color, isFlat: true)
-                        
-                        // change checkmark color to contrast depending on background cell color (framework)
-                        cell.tintColor = UIColor(contrastingBlackOrWhiteColorOn: color, isFlat: true)
-                        
-                        // change bar tint of navigation bar
-                        navigationController?.navigationBar.barTintColor = color
-                        
-                        // change bar title of navigation bar
-                        navigationController?.navigationBar.topItem?.title = newName
-                    }
-  
-                }
-
-                
-    
-            } else {
-                // show error on the screen
-                cell.textLabel?.text = "array is nil"
-            }
-
-            return cell
+            // change default text color to contrast depending on background cell color (framework)
+            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: color, isFlat: true)
+            
+            // change checkmark color to contrast depending on background cell color (framework)
+            cell.tintColor = UIColor(contrastingBlackOrWhiteColorOn: color, isFlat: true)
+            
+            // change bar tint of navigation bar depending on Category color
+            navigationController?.navigationBar.barTintColor = color.darken(byPercentage: 0.8)
+            
+            // change bar title of navigation bar depending on Category name
+            title = newName
+            
+            // change bar title of search bar depending on Category color
+            todoSearchBar.barTintColor = color.darken(byPercentage: 0.7)
         }
+        
+        return cell
+    }
    
     // MARK: - UITableViewDataDelegate
     

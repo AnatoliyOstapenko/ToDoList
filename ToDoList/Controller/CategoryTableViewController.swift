@@ -39,26 +39,24 @@ class CategoryTableViewController: SwipeTableViewController {
     
     // update cell as SwipeTableViewController
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        
         // create cell as a super table view from SwipeTableViewController
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-
-        //create item to get array[indexPath.row]
-        if let item = array?[indexPath.row] {
-            
-            // create color to change String data type to UIColor data type
-            let color = UIColor(hexString: item.color)
-            
-            // get default color from array (it was saved in add method)
-            cell.backgroundColor = color
-            
-            // get default text from array (it was saved in add method)
-            cell.textLabel?.text = item.name
-            
-            // change default text color to contrast depending on background cell color (framework)
-            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: color ?? .darkText, isFlat: true)
-            
-        } else { print("error with cell") }
+        
+        // create item to get array[indexPath.row]
+        guard let item = array?[indexPath.row] else { fatalError("error in unwrapping array?[indexPath.row]") }
+        
+        // create color to change String data type to UIColor data type
+        guard let color = UIColor(hexString: item.color) else { fatalError("error in color creation") }
+        
+        // get default color from array (it was saved in add method)
+        cell.backgroundColor = color
+        
+        // get default text from array (it was saved in add method)
+        cell.textLabel?.text = item.name
+        
+        // change default text color to contrast depending on background cell color (framework)
+        cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: color, isFlat: true)
 
         return cell
     }

@@ -61,17 +61,16 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     }
     // to customize the behavior of the swipe actions:
     func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        
         var options = SwipeOptions()
+        
         // delete row to do one swipe
         options.expansionStyle = .destructive
-
         
         return options
-        
-        
     }
     
-    // create function to use in CategoryTableViewController
+    // create function to use in other TableViewController
     func deleteBySwiping (at indexPath: IndexPath) {
 
     }

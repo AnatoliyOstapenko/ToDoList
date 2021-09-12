@@ -17,17 +17,14 @@ class CategoryTableViewController: SwipeTableViewController {
     // initialize Realm
     let realm = try! Realm()
     
-    
     // create array to initialize Result collection of Category struct
     var array: Results <Category>?
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // load last saved data
         loadData()
-        
         
     }
 
@@ -45,21 +42,23 @@ class CategoryTableViewController: SwipeTableViewController {
 
         // create cell as a super table view from SwipeTableViewController
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        
-        
 
-        //create item to dispatch array[indexPath.row]
+        //create item to get array[indexPath.row]
         if let item = array?[indexPath.row] {
             
+            // create color to change String data type to UIColor data type
+            let color = UIColor(hexString: item.color)
+            
             // get default color from array (it was saved in add method)
-            cell.backgroundColor = UIColor(hexString: item.color)
+            cell.backgroundColor = color
             
             // get default text from array (it was saved in add method)
             cell.textLabel?.text = item.name
             
+            // change default text color to contrast depending on background cell color (framework)
+            cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: color ?? .darkText, isFlat: true)
+            
         } else { print("error with cell") }
-        
-        
 
         return cell
     }
@@ -94,8 +93,7 @@ class CategoryTableViewController: SwipeTableViewController {
         
         // dispatch data to selectedCategory in ToDoTableVC
         destinationVC.selectedCategory = array?[indexPath.row]
-        
-       
+ 
     }
 
     //MARK: - Add New Items
@@ -107,6 +105,24 @@ class CategoryTableViewController: SwipeTableViewController {
         
         // create pop up alert message
         let alert = UIAlertController(title: "Add new category", message: "", preferredStyle: .alert)
+        
+        
+        // It should happen when user click on addButtonPressed:
+        
+        
+        // create TextField in alert message to make user prints
+        alert.addTextField { (alertTextField) in
+
+            // create placeholder in TextField
+            alertTextField.placeholder = "create a new category"
+            
+            // dispatch placeholder to TextField
+            textField = alertTextField
+            
+        }
+        
+        // create action UIAlertAction button for alert message
+        let cancelButton = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
         
         // create UIAlertAction Button for alert message
         let addButton = UIAlertAction(title: "Add", style: .default) { (action) in
@@ -121,31 +137,20 @@ class CategoryTableViewController: SwipeTableViewController {
             
             //assign "name" getting from text field that user printed
             item.name = text
+            
+            // add random color from Chameleon framework
             item.color = UIColor.randomFlat().hexValue()
+            
             // save data
             self.saveData(item: item)
 
         }
-        // create action UIAlertAction button for alert message
-        let cancelButton = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
-        
-        // It should happen when user click on addButtonPressed
-        // create TextField in alert message to make user prints
-        alert.addTextField { (alertTextField) in
 
-            // create placeholder in TextField
-            alertTextField.placeholder = "create a new category"
-            
-            // dispatch typed data by user to TextField
-            textField = alertTextField
-            
-        }
-        
         // attaches all of UIAlertAction objects to the alert
         alert.addAction(addButton)
         alert.addAction(cancelButton)
 
-        //activation alert
+        //alert activation
         present(alert, animated: true, completion: nil)
         
     }

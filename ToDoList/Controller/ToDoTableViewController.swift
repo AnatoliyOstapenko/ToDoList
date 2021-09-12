@@ -34,6 +34,7 @@ class ToDoTableViewController: SwipeTableViewController {
         // initialize UISearchBarDelegate
         todoSearchBar.delegate = self
 
+
     }
     
     //MARK: - UITableViewDataSource
@@ -50,16 +51,38 @@ class ToDoTableViewController: SwipeTableViewController {
             // create cell as a super table view from SwipeTableViewController
             let cell = super.tableView(tableView, cellForRowAt: indexPath)
 
-            //create and unwrap item to dispatch array[indexPath.row]
+            //create and unwrap item to get array[indexPath.row]
             if let item = array?[indexPath.row] {
                 
                 // dispatch to default text label list of text from array
                 cell.textLabel?.text = item.title
                 
                 //Ternary operator ==> instead of if let statement
-                // value which has to be changed = condition ? if value true : else value false
+                // value which has to be changed = boolean condition ? if value true : else value false
                 cell.accessoryType = item.done ? .checkmark : .none
+
+                // creat newColor to return color from Category class in Realm
+                if let newColor = selectedCategory?.color {
+                    // change String to UIColor type
+                    let categoryColor = UIColor(hexString: newColor)
+                    
+                    // set gradient colors to cells from Chameleon Framework
+                    if let color = categoryColor!.lighten(byPercentage: CGFloat(indexPath.row) / CGFloat(array!.count)) {
+                        // set cell color
+                        cell.backgroundColor = color
+                        
+                        // change default text color to contrast depending on background cell color (framework)
+                        cell.textLabel?.textColor = UIColor(contrastingBlackOrWhiteColorOn: color, isFlat: true)
+                        
+                        // change checkmark color to contrast depending on background cell color (framework)
+                        cell.tintColor = UIColor(contrastingBlackOrWhiteColorOn: color, isFlat: true)
+                        
+                    }
+  
+                }
+
                 
+    
             } else {
                 // show error on the screen
                 cell.textLabel?.text = "array is nil"
@@ -87,6 +110,7 @@ class ToDoTableViewController: SwipeTableViewController {
         
         // create animated effect of deselecting row
         tableView.deselectRow(at: indexPath, animated: true)
+        
         //update UI
         tableView.reloadData()
         
@@ -102,7 +126,22 @@ class ToDoTableViewController: SwipeTableViewController {
         // create pop up alert message
         let alert = UIAlertController(title: "Add ToDo Item", message: "", preferredStyle: .alert)
         
-        // add mandatory next step. create action for alert message
+        // It should happen when user click on addBarButtonPressed:
+        
+        // create TextField in alert message to make user prints
+        alert.addTextField { (alertTextField) in
+
+            // create placeholder in TextField
+            alertTextField.placeholder = "create a new item"
+            
+            // dispatch placeholder to TextField
+            textField = alertTextField
+            
+        }
+        // create action UIAlertAction button for alert message
+        let cancelButton = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
+        
+        // create action UIAlertAction button for alert message
         let addButton = UIAlertAction(title: "Add", style: .default) { (action) in
             
             //All this happens when user click on UIAlertAction button:
@@ -131,23 +170,7 @@ class ToDoTableViewController: SwipeTableViewController {
             // update UI
             self.tableView.reloadData()
         }
-        
-        // create action UIAlertAction button for alert message
-        let cancelButton = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
-        
-        // It should happen when user click on addBarButtonPressed:
-        
-        // create TextField in alert message to make user prints
-        alert.addTextField { (alertTextField) in
 
-            // create placeholder in TextField
-            alertTextField.placeholder = "create a new item"
-            
-            // dispatch typed data by user to TextField
-            textField = alertTextField
-            
-        }
-        
         // attaches actions object to the alert or action sheet.
         alert.addAction(addButton)
         alert.addAction(cancelButton)
